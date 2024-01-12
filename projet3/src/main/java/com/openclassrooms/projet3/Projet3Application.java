@@ -1,5 +1,6 @@
 package com.openclassrooms.projet3;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -9,7 +10,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 public class Projet3Application {
 
 	public static void main(String[] args) {
-        SpringApplication.run(Projet3Application.class, args);
+		PropertyConfigurator.configure("projet3/src/main/resources/log4j.properties");
+		SpringApplication.run(Projet3Application.class, args);
 	}
 
 }
