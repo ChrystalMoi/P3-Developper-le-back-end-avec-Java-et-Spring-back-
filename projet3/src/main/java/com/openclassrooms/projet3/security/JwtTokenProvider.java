@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -30,9 +31,6 @@ public class JwtTokenProvider {
             // Encodage de l'e-mail en Base64URL avec UTF-8 explicite
             String encodedEmail = new String(Base64.encodeBase64URLSafe(email.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 
-            // Affiche l'e-mail encodé dans les logs (ne pas afficher)
-            System.out.println("Encoded Email: " + encodedEmail);
-
             // Date actuelle
             Date now = new Date();
 
@@ -40,7 +38,7 @@ public class JwtTokenProvider {
             Date expiryDate = new Date(now.getTime() + expirationInMs);
 
             return Jwts.builder()
-                    .setSubject(email)
+                    .setSubject(encodedEmail)
                     .setIssuedAt(now)
                     .setExpiration(expiryDate)
                     .signWith(getSecretKey(), SignatureAlgorithm.HS512)
@@ -70,12 +68,10 @@ public class JwtTokenProvider {
                     .getBody()
                     .getSubject();
 
-            // Affiche l'e-mail encodé dans les logs
-            System.out.println("Encoded Email from Token: " + encodedEmail);
-
             try {
                 // Decode l'e-mail
                 return new String(Base64.decodeBase64(encodedEmail), StandardCharsets.UTF_8);
+
             } catch (Exception ex) {
                 throw new JwtException("Erreur lors du décodage de l'e-mail depuis le token JWT", ex);
             }
