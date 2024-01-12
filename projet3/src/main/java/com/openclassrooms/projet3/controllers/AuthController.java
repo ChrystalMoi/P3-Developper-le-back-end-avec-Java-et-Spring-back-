@@ -3,9 +3,9 @@ package com.openclassrooms.projet3.controllers;
 import com.openclassrooms.projet3.exception.UserAlreadyExistsException;
 import com.openclassrooms.projet3.request.UserRegistrationRequest;
 import com.openclassrooms.projet3.services.RegisterService;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+    private static Logger logger = Logger.getLogger(AuthController.class);
+
     // Injection de dépendance du service RegisterService dans le contrôleur
-    @Autowired
-    private RegisterService registerService;
+    private final RegisterService registerService;
+
+    //Constructeur qui remplace le autowired
+    public AuthController(RegisterService registerService) {
+        this.registerService = registerService;
+    }
 
     // Endpoint pour gérer les requêtes de connexion
     @PostMapping("/login")
@@ -25,21 +31,25 @@ public class AuthController {
     }
 
     // Endpoint pour gérer les requêtes d'inscription
-    @PostMapping("/register")
+    @PostMapping(value = "/register", produces = "application/json")
     public ResponseEntity<String> register(@RequestBody UserRegistrationRequest registrationRequest) {
         // Affiche un message de confirmation dans la console
-        System.out.println("dans le register");
+        logger.info("dans le register");
+
         try {
             // Appelle le service RegisterService pour effectuer l'inscription et récupère le token JWT résultant
             String token = registerService.registerUser(registrationRequest);
 
-            System.out.println("register token created");
+            logger.info("register token created");
+
+            /* objet json sous forme de string*/
+            String reponse = "{\"token\":\""+token+"\"}";
 
             // Retourne une réponse HTTP avec le token JWT dans le corps de la réponse
-            return ResponseEntity.ok().body(token);
+            return ResponseEntity.ok().body(reponse);
 
         } catch (UserAlreadyExistsException e) {
-            System.out.println("register exception UserAlreadyExistsException");
+            logger.error("register exception UserAlreadyExistsException");
 
             // Retourne une exception car user existe déjà
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -58,5 +68,26 @@ public class AuthController {
      *
      * La réponse doit être la même que la réponse de Mockoon
      */
+
+    /**
+     * Login doit dans login()
+     * (pas de code métier dans le controller donc il faut appeler un service
+     * login où il y a le code métier):
+     *
+     * - vérifier que login(email) et mdp sont bien entrée
+     *      - si pas bien entrée - 400 bad request
+     * - récupérer le mot de passe dans la bdd par rapport à l'email entrée
+     *      - si user non inscrit -> 404 not found
+     * - comparer le mot de passe de l'entrée avec celui de la bdd (bcrypt)
+     *      - mdp.bdd = mdp.entrée -> 200 ok + retourner token
+     *      - mdp.bdd != mdp.entrée -> 401 Unauthorized
+     */
+
+    @GetMapping("/me")
+    public void me() {
+        logger.info("me ok");
+
+        //vérifier que "/me" retourne la même chose que Mockoon sans token (dans Authorization -> No Auth)
+    }
 
 }

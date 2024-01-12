@@ -30,7 +30,7 @@ public class JwtTokenProvider {
             // Encodage de l'e-mail en Base64URL avec UTF-8 explicite
             String encodedEmail = new String(Base64.encodeBase64URLSafe(email.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 
-            // Affiche l'e-mail encodé dans les logs
+            // Affiche l'e-mail encodé dans les logs (ne pas afficher)
             System.out.println("Encoded Email: " + encodedEmail);
 
             // Date actuelle
@@ -43,9 +43,9 @@ public class JwtTokenProvider {
                     .setSubject(email)
                     .setIssuedAt(now)
                     .setExpiration(expiryDate)
-                    //.signWith(SignatureAlgorithm.HS512, secretKey)
                     .signWith(getSecretKey(), SignatureAlgorithm.HS512)
                     .compact();
+
         } catch (Exception e) {
             throw new JwtException("Erreur lors de la génération du token JWT", e);
         }

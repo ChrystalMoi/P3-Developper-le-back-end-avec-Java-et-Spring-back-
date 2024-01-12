@@ -12,16 +12,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegisterService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
     // Composant pour générer des tokens JWT
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
     // Utilisation du PasswordEncoder configuré dans SecurityConfig
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    // Constructeur
+    public RegisterService(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public String registerUser(UserRegistrationRequest registrationRequest) throws UserAlreadyExistsException{
         // Vérification si l'utilisateur existe déjà dans la base de données (ici par email)

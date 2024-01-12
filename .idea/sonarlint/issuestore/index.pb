@@ -27,3 +27,8 @@ G
 Sprojet3/projet3/src/main/java/com/openclassrooms/projet3/services/LoginService.java,5\d\5d38e307fc695f59f74362f8caa2a96661ad6926
 J
 projet3/projet3/.gitignore,c\8\c86cd725c9fc87700aa9589b957a3d83e2f74e8c
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+?
+projet3/pom.xml,f\3\f377a7b0a80564dab0998e92043a624f7365b5f6
