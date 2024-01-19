@@ -31,11 +31,12 @@ public class UserController {
 
     // --------------------------------------
     // Endpoint pour récupérer un utilisateur par son ID
+    // Correspond à : /user/:id
     // --------------------------------------
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public Optional<UserEntity> getUserById(@PathVariable Integer id) {
         // Appel à la méthode getUserById() du service UserService
-        // Cette méthode utilise UserRepository pour récupérer un utilisateur par son ID
+        // Cette méthode utilise UserRepository pour récupérer un user par ID dans la base de donnée
         return userService.getUserById(id);
     }
 }
