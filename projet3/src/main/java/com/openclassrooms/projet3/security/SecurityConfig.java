@@ -27,12 +27,11 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/auth/register").permitAll();
-                    auth.requestMatchers("/auth/login").permitAll();
-                    auth.requestMatchers("/auth/me").permitAll();
+                    auth.requestMatchers("/api/auth/register").permitAll();
+                    auth.requestMatchers("/api/auth/login").permitAll();
                     auth.anyRequest().authenticated();
                 } )
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
+                //.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }
 
@@ -41,9 +40,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Value("${jwt.secretKey}")
     private String secretKey;
+
     @Bean
     public JwtDecoder jwtDecoder() {
         SecretKeySpec secretKeySpec = new SecretKeySpec(this.secretKey.getBytes(), 0, this.secretKey.getBytes().length, "RSA");
