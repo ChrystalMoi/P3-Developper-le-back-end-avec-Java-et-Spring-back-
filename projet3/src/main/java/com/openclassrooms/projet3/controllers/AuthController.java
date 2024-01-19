@@ -9,7 +9,6 @@ import com.openclassrooms.projet3.services.LoginService;
 import com.openclassrooms.projet3.services.RegisterService;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private static Logger logger = Logger.getLogger(AuthController.class);
+    private static final Logger logger = Logger.getLogger(AuthController.class);
 
     // Injection de dépendance du service RegisterService et loginService dans le contrôleur
     private final RegisterService registerService;
     private final LoginService loginService;
 
-    //Constructeur qui remplace le autowired
+    //Constructeur qui remplace l'autowired
     public AuthController(RegisterService registerService, LoginService loginService) {
         this.registerService = registerService;
         this.loginService = loginService;
@@ -53,13 +52,13 @@ public class AuthController {
         catch (UserDoesNotExistException e){
             logger.error("login exception UserDoesNotExistException");
 
-            // Retourne une exception car user existe déjà
+            // Retourne une exception, car user existe déjà
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         catch (InvalidPasswordException e){
             logger.error("login exception InvalidPasswordException");
 
-            // Retourne une exception car user existe déjà
+            // Retourne une exception, car user existe déjà
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
@@ -67,15 +66,14 @@ public class AuthController {
     /**
      * Login doit dans login()
      * (pas de code métier dans le controller donc il faut appeler un service
-     * login où il y a le code métier):
-     *
+     * login où il y a le code métier) :
      * - vérifier que login(email) et mdp sont bien entrée
      *      - si pas bien entrée - 400 bad request
-     * - récupérer le mot de passe dans la bdd par rapport à l'email entrée
-     *      - si user non inscrit -> 404 not found
+     * - récupérer le mot de passe dans la bdd par rapport à l'email entré
+     *      - si user non inscrit → 404 not found
      * - comparer le mot de passe de l'entrée avec celui de la bdd (bcrypt)
-     *      - mdp.bdd = mdp.entrée -> 200 ok + retourner token
-     *      - mdp.bdd != mdp.entrée -> 401 Unauthorized
+     *      - mdp.bdd = mdp.entrée → 200 ok + retourner token
+     *      - mdp.bdd != mdp.entrée → 401 Unauthorized
      */
 
     // Endpoint pour gérer les requêtes d'inscription
@@ -99,7 +97,7 @@ public class AuthController {
         } catch (UserAlreadyExistsException e) {
             logger.error("register exception UserAlreadyExistsException");
 
-            // Retourne une exception car user existe déjà
+            // Retourne une exception, car user existe déjà
             return ResponseEntity.badRequest().body(e.getMessage());
 
         }
@@ -108,12 +106,10 @@ public class AuthController {
     /**
      * Register doit dans register()
      * (pas de code métier dans le controller donc il faut appeler un service
-     * register où il y a le code métier):
-     *
+     * register où il y a le code métier) :
      * - créer un user en base
      * - générer un token jwt
      * - retourner en retour de la requete le token jwt
-     *
      * La réponse doit être la même que la réponse de Mockoon
      */
 

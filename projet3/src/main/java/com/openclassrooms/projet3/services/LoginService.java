@@ -16,15 +16,14 @@ public class LoginService {
     /**
      * Login doit dans login()
      * (pas de code métier dans le controller donc il faut appeler un service
-     * login où il y a le code métier):
-     *
+     * login où il y a le code métier) :
      * - vérifier que login(email) et mdp sont bien entrée
      *      - si pas bien entrée - 400 bad request
-     * - récupérer le mot de passe dans la bdd par rapport à l'email entrée
-     *      - si user non inscrit -> 404 not found
+     * - récupérer le mot de passe dans la bdd par rapport à l'email entré
+     *      - si user non inscrit → 404 not found
      * - comparer le mot de passe de l'entrée avec celui de la bdd (bcrypt)
-     *      - mdp.bdd = mdp.entrée -> 200 ok + retourner token
-     *      - mdp.bdd != mdp.entrée -> 401 Unauthorized
+     *      - mdp.bdd = mdp.entrée → 200 ok + retourner token
+     *      - mdp.bdd != mdp.entrée → 401 Unauthorized
      */
 
     private final UserRepository userRepository;
@@ -44,7 +43,7 @@ public class LoginService {
 
     //
     public String loginUser(UserLoginRequest userLoginRequest) throws UserDoesNotExistException, InvalidPasswordException{
-        // Si il n'y a pas d'entrée avec l'email dans la bdd alors lancement de l'exception
+        // S'il n'y a pas d'entrée avec l'email dans la bdd alors lancement de l'exception
         if (!userRepository.existsByEmail(userLoginRequest.getLogin())) {
             throw new UserDoesNotExistException("L'utilisateur avec ce mail n'existe pas.");
         }
@@ -59,7 +58,7 @@ public class LoginService {
                 throw new UserDoesNotExistException("L'utilisateur avec ce mail n'existe pas.");
             }
 
-            // Extraction de UserEntity de l'intérieur du Optional
+            // Extraction de UserEntity de l'intérieur de l'Optional
             UserEntity bddUser = optionalBddUser.get();
 
             // Vérification mdp.bdd = mdp.entrée
@@ -70,7 +69,7 @@ public class LoginService {
                 throw new InvalidPasswordException("Mot de passe invalide.");
             }
 
-            //Si les mots de passe sont identique alors connexion
+            //Si les mots de passe sont identiques alors connexion
             else {
                 // Génère un token JWT
                 return jwtTokenProvider.generateToken(bddUser.getEmail());
