@@ -53,3 +53,5 @@ z
 Jprojet3/src/main/java/com/openclassrooms/projet3/services/UserService.java,6\2\62f323b52a0855476f90edc7f6df313766e89444
 x
 Hprojet3/src/main/java/com/openclassrooms/projet3/services/MeService.java,a\1\a1de10768fb26065b039b5c70deba678e15dabb9
+z
+Jprojet3/src/main/java/com/openclassrooms/projet3/services/AuthService.java,0\3\036adc703bd866b2be0b1eafcd57f45a5e11cd56

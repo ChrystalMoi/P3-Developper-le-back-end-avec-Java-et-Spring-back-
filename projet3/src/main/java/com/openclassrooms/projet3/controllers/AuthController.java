@@ -5,8 +5,7 @@ import com.openclassrooms.projet3.exception.UserAlreadyExistsException;
 import com.openclassrooms.projet3.exception.UserDoesNotExistException;
 import com.openclassrooms.projet3.request.UserLoginRequest;
 import com.openclassrooms.projet3.request.UserRegistrationRequest;
-import com.openclassrooms.projet3.services.LoginService;
-import com.openclassrooms.projet3.services.RegisterService;
+import com.openclassrooms.projet3.services.AuthService;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     private static final Logger logger = Logger.getLogger(AuthController.class);
 
     // Injection de dépendance du service RegisterService et loginService dans le contrôleur
-    private final RegisterService registerService;
-    private final LoginService loginService;
+    private final AuthService authService;
+
 
     //Constructeur qui remplace l'autowired
-    public AuthController(RegisterService registerService, LoginService loginService) {
-        this.registerService = registerService;
-        this.loginService = loginService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     // Endpoint pour gérer les requêtes de connexion
@@ -38,7 +36,7 @@ public class AuthController {
 
         try{
             // Appelle le service LoginService pour effectuer la connexion et récupère le token JWT résultant
-            String token = loginService.loginUser(userLoginRequest);
+            String token = authService.loginUser(userLoginRequest);
 
             logger.info("login token created");
 
@@ -84,7 +82,7 @@ public class AuthController {
 
         try {
             // Appelle le service RegisterService pour effectuer l'inscription et récupère le token JWT résultant
-            String token = registerService.registerUser(registrationRequest);
+            String token = authService.registerUser(registrationRequest);
 
             logger.info("register token created");
 
@@ -117,7 +115,10 @@ public class AuthController {
     public void me() {
         logger.info("me ok");
 
-        //vérifier que "/me" retourne la même chose que Mockoon sans token (dans Authorization -> No Auth)
+        // Faire la sécurisation avant (demander à Joachim en quoi cela consiste)
+
+        // Vérifier que "/me" retourne la même chose que Mockoon sans token
+        // (dans Authorization -> No Auth)
     }
 
 }
