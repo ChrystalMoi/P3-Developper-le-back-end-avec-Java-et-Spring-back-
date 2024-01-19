@@ -33,6 +33,11 @@ public class RegisterService {
             throw new UserAlreadyExistsException("L'utilisateur avec ce mail existe déjà.");
         }
 
+        // Vérification que toutes les informations nécessaires sont renseignées
+        if (registrationRequest.getEmail() == null || registrationRequest.getName() == null || registrationRequest.getPassword() == null) {
+            throw new IllegalArgumentException("Toutes les informations (email, nom et mot de passe) sont requises. Merci de tout renseigner.");
+        }
+
         // Crée un nouvel utilisateur via UserEntity
         UserEntity user = new UserEntity();
         user.setEmail(registrationRequest.getEmail());
