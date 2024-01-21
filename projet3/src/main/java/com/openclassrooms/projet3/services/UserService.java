@@ -2,7 +2,6 @@ package com.openclassrooms.projet3.services;
 
 import com.openclassrooms.projet3.entites.UserEntity;
 import com.openclassrooms.projet3.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +13,11 @@ public class UserService {
     // --------------------------------------
     // Injection de dépendance de UserRepository dans UserService
     // --------------------------------------
-    @Autowired
     private UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // --------------------------------------
     // Méthode pour récupérer tous les utilisateurs
