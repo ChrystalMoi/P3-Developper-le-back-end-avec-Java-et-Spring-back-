@@ -12,13 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/user")
 public class UserController {
     // --------------------------------------
     // Injection de dépendance du service UserService dans le contrôleur
     // --------------------------------------
-    @Autowired
     private UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     // --------------------------------------
     // Endpoint pour récupérer tous les utilisateurs
