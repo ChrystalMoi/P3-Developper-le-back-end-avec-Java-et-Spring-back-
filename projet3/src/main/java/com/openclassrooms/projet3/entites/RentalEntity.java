@@ -1,6 +1,5 @@
 package com.openclassrooms.projet3.entites;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
