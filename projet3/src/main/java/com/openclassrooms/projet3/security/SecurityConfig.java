@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/auth/register").permitAll();
                     auth.requestMatchers("/api/auth/login").permitAll();
+                    auth.requestMatchers("/api/rentals").permitAll();
+                    auth.requestMatchers("/api/rentals/{id}").permitAll();
                     auth.anyRequest().authenticated();
                 } )
                 //.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))

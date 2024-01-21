@@ -23,7 +23,6 @@ public class AuthController {
     // Injection de dépendance du service RegisterService et loginService dans le contrôleur
     private final AuthService authService;
 
-
     //Constructeur qui remplace l'autowired
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -97,7 +96,6 @@ public class AuthController {
 
             // Retourne une exception, car user existe déjà
             return ResponseEntity.badRequest().body(e.getMessage());
-
         }
     }
 
