@@ -31,6 +31,8 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/auth/login").permitAll();
                     auth.requestMatchers("/api/rentals").permitAll();
                     auth.requestMatchers("/api/rentals/{id}").permitAll();
+                    auth.requestMatchers("/api/messages").permitAll();
+                    auth.requestMatchers("/api/user/{id}").permitAll();
                     auth.anyRequest().authenticated();
                 } )
                 //.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
