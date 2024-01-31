@@ -9,6 +9,8 @@ import com.openclassrooms.projet3.request.UserLoginRequest;
 import com.openclassrooms.projet3.request.UserRegistrationRequest;
 import com.openclassrooms.projet3.security.JwtTokenProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,11 +26,14 @@ public class AuthService {
     // Utilisation du PasswordEncoder configuré dans SecurityConfig
     private final PasswordEncoder passwordEncoder;
 
+    private final JwtDecoder jwtDecoder;
+
     // Controller
-    public AuthService(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, JwtDecoder jwtDecoder) {
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
+        this.jwtDecoder = jwtDecoder;
     }
 
     /**
@@ -61,7 +66,7 @@ public class AuthService {
         userRepository.save(user);
 
         // Génère un token JWT
-        return jwtTokenProvider.generateToken(user.getEmail());
+        return jwtTokenProvider.generateToken(user);
     }
 
     /**
@@ -106,12 +111,22 @@ public class AuthService {
             //Si les mots de passe sont identiques alors connexion
             else {
                 // Génère un token JWT
-                return jwtTokenProvider.generateToken(bddUser.getEmail());
+                return jwtTokenProvider.generateToken(bddUser);
             }
         }
     }
 
-    public String meUser(){
-        return "ok";
+    public UserEntity meUser(Integer userId) throws UserDoesNotExistException{
+        // Dans idToken, on stocke l'utilisateur avec le même id que celui du claim
+        //int idToken = Integer.parseInt(token.getClaimAsString("id"));
+
+        // On cherche dans la bdd un user avec le même id que celui du token
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+
+        if(!optionalUser.isPresent()){
+            throw new UserDoesNotExistException("User introuvable");
+        } else {
+            return optionalUser.get();
+        }
     }
 }
