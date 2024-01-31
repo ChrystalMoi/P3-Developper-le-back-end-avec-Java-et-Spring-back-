@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -128,14 +129,18 @@ public class AuthController {
     @GetMapping(value = "/me", produces = "application/json")
     public ResponseEntity<String> me(@CurrentSecurityContext SecurityContext context){
         try {
-            // Pour récupérer les données nécessaires pour une authentification (avec token)
-            // Integer authenticationToken = (Integer) context
-            Integer userId = (Integer) SecurityContextHolder.getContext()
-                    .getAuthentication()
-                    .getPrincipal();
+            // Pour récupérer l'user authentifié (avec token)
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            if(auth.getPrincipal().equals("anonymousUser")) {
+                LOGGER.error("Utilisateur non connecté.");
+                return ResponseEntity.ok().body("");
+            }
+
+            Integer userId = (Integer) auth.getPrincipal();
 
             // TODO : a supprimer
-            LOGGER.info("Token récupérer : " + userId.toString());
+            LOGGER.info("Id récupérer : " + userId.toString());
 
             UserEntity reponseUser = authService.meUser(userId);
 
@@ -148,9 +153,10 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
 
         } catch (Exception e) {
-            LOGGER.error("Utilisateur non connecter : " + e.getMessage());
+            LOGGER.error("Erreur : " + e.getMessage());
 
-            return ResponseEntity.ok().body("");
+            //500 - erreur côté server
+            return ResponseEntity.internalServerError().body("");
         }
 
     }
