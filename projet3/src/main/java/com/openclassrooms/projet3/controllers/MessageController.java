@@ -5,7 +5,6 @@ import com.openclassrooms.projet3.request.MessageSendRequest;
 import com.openclassrooms.projet3.services.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,19 +16,22 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/messages")
+//@Api(tags = "Messages", description = "Endpoints related to Messages")
 public class MessageController {
 
-    private MessageService messageService;
+    private final MessageService messageService;
 
     public MessageController(MessageService messageService) {
         this.messageService = messageService;
     }
 
+    //@ApiOperation(value = "Get all messages", produces = "application/json")
     @GetMapping
     public List<MessageEntity> getAllMessages() {
         return messageService.getAllMessages();
     }
 
+    //@ApiOperation(value = "Send a new message", produces = "application/json")
     @PostMapping(produces = "application/json")
     public ResponseEntity envoieMessages(@RequestBody MessageSendRequest messageSendRequest){
         try {
@@ -54,6 +56,7 @@ public class MessageController {
         }
     }
 
+    // @ApiOperation(value = "Get a message by ID", produces = "application/json")
     @GetMapping("/{id}")
     public Optional<MessageEntity> getMessageById(@PathVariable Integer id) {
         return messageService.getMessageById(id);

@@ -19,11 +19,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rentals")
+// @Api(tags = "Rentals", description = "Endpoints related to Rentals")
 public class RentalController {
     // --------------------------------------
     // Injection de dépendance du service RentalService
     // --------------------------------------
-    private RentalService rentalService;
+    private final RentalService rentalService;
 
     // --------------------------------------
     // Contrôleur
@@ -37,6 +38,7 @@ public class RentalController {
     // Correspond à : /rentals
     // Méthode GET
     // --------------------------------------
+    // @ApiOperation(value = "Get all rentals", produces = "application/json")
     @GetMapping
     public List<RentalEntity> getAllRentals() {
         // Appel à la méthode de RentalService
@@ -49,6 +51,7 @@ public class RentalController {
     // Méthode POST
     // TODO : Voir le owner_id
     // --------------------------------------
+    // @ApiOperation(value = "Create a new rental", produces = "application/json")
     @PostMapping(produces = "application/json")
     public ResponseEntity<String> createRental(@ModelAttribute RentalCreationRequest rentalRequest) {
         try {
@@ -86,6 +89,7 @@ public class RentalController {
     // Correspond à : /rentals/:id
     // Méthode GET
     // --------------------------------------
+    //@ApiOperation(value = "Get a rental by ID", produces = "application/json")
     @GetMapping(value = "/{id}", produces = "application/json")
     public Optional<RentalEntity> getRentalById(@PathVariable Integer id) {
         return rentalService.getRentalById(id);
@@ -97,6 +101,7 @@ public class RentalController {
     // Méthode PUT
     // @ModelAttribute = multipart (form-data avec différents type de variable)
     // --------------------------------------
+    //@ApiOperation(value = "Update a rental by ID", consumes = "multipart/form-data", produces = "application/json")
     @PutMapping(value = "/{id}", consumes = "multipart/form-data" ,produces = "application/json")
     public ResponseEntity updateRental(@PathVariable Integer id, @ModelAttribute RentalUpdateRequest rentalUpdateRequest){
         System.out.println("avant le try du update");

@@ -95,6 +95,8 @@ public class RentalService {
         // Extraction de RentalEntity de l'intérieur de l'Optional
         RentalEntity bddRental = rentalEntityUpdate.get();
 
+        // ligne 88 à 96 -> RentalEntity bddRental = rentalRepository.findById(id).orElseThrow(()-> new RentalDoesNotExistException("Le bien avec cet identifiant n'existe pas !"));
+
         // Mise à jour du bien avec les nouvelles entrées
         bddRental.setName(rentalUpdateRequest.getName());
         bddRental.setPrice(rentalUpdateRequest.getPrice());
