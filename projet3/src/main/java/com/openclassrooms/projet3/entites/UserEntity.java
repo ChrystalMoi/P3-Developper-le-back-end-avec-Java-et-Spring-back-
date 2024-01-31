@@ -49,4 +49,12 @@ public class UserEntity {
 
     public Timestamp getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
+
+    public String infoMe() {
+        return String.format("{\"id\":%s, \"name\":\"%s\", \"email\":\"%s\", \"created_at\":\"%s\", \"updated_at\":\"%s\"}",
+                getId(), getName(), getEmail(), getCreatedAt(), getUpdatedAt());
+    }
+
+
+
 }
