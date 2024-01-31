@@ -57,3 +57,5 @@ Sprojet3/src/main/java/com/openclassrooms/projet3/request/RentalCreationRequest.
 Qprojet3/src/main/java/com/openclassrooms/projet3/request/RentalUpdateRequest.java,a\4\a45916e398a23330c7e4839d4a5366aeeebf32a5
 ‹
 [projet3/src/main/java/com/openclassrooms/projet3/exception/RentalDoesNotExistException.java,a\a\aa56e4ff505564d94c973231d2581fa874c64ecb
+€
+Pprojet3/src/main/java/com/openclassrooms/projet3/request/MessageSendRequest.java,a\b\ab5865c64199f02bce31146400171dee787b2978
