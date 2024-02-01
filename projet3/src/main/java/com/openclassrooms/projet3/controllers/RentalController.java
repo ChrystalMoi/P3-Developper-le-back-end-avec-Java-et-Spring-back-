@@ -5,6 +5,13 @@ import com.openclassrooms.projet3.exception.RentalDoesNotExistException;
 import com.openclassrooms.projet3.request.RentalCreationRequest;
 import com.openclassrooms.projet3.request.RentalUpdateRequest;
 import com.openclassrooms.projet3.services.RentalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,7 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rentals")
-// @Api(tags = "Rentals", description = "Endpoints related to Rentals")
+@Tag(name = "Rentals Controller", description = "Endpoints related to Rentals")
 public class RentalController {
     // --------------------------------------
     // Injection de dépendance du service RentalService
@@ -38,7 +45,14 @@ public class RentalController {
     // Correspond à : /rentals
     // Méthode GET
     // --------------------------------------
-    // @ApiOperation(value = "Get all rentals", produces = "application/json")
+    @Operation(
+            summary = "Get All Rentals",
+            description = "Retrieves a list of all rental entities.",
+            tags = { "Rental" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of rentals.", content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RentalEntity.class))) }),
+            @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "text/plain") })
+    })
     @GetMapping
     public List<RentalEntity> getAllRentals() {
         // Appel à la méthode de RentalService
@@ -51,7 +65,15 @@ public class RentalController {
     // Méthode POST
     // TODO : Voir le owner_id
     // --------------------------------------
-    // @ApiOperation(value = "Create a new rental", produces = "application/json")
+    @Operation(
+            summary = "Create a new rental",
+            description = "Creates a new rental entity.",
+            tags = { "Rental" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully created the rental.", content = { @Content(mediaType = "application/json") }),
+            @ApiResponse(responseCode = "400", description = "Bad request. Check if all required fields are provided.", content = { @Content(mediaType = "application/json") }),
+            @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "text/plain") })
+    })
     @PostMapping(produces = "application/json")
     public ResponseEntity<String> createRental(@ModelAttribute RentalCreationRequest rentalRequest) {
         try {
@@ -89,7 +111,14 @@ public class RentalController {
     // Correspond à : /rentals/:id
     // Méthode GET
     // --------------------------------------
-    //@ApiOperation(value = "Get a rental by ID", produces = "application/json")
+    @Operation(
+            summary = "Get Rental by ID",
+            description = "Retrieves a rental entity by its ID.",
+            tags = { "Rental" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the rental.", content = { @Content(mediaType = "application/json") }),
+            @ApiResponse(responseCode = "404", description = "Rental not found.", content = { @Content(mediaType = "application/json") })
+    })
     @GetMapping(value = "/{id}", produces = "application/json")
     public Optional<RentalEntity> getRentalById(@PathVariable Integer id) {
         return rentalService.getRentalById(id);
@@ -101,7 +130,16 @@ public class RentalController {
     // Méthode PUT
     // @ModelAttribute = multipart (form-data avec différents type de variable)
     // --------------------------------------
-    //@ApiOperation(value = "Update a rental by ID", consumes = "multipart/form-data", produces = "application/json")
+    @Operation(
+            summary = "Update Rental by ID",
+            description = "Updates a rental entity by its ID.",
+            tags = { "Rental" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully updated the rental.", content = { @Content(mediaType = "application/json") }),
+            @ApiResponse(responseCode = "400", description = "Bad request. Check the request parameters.", content = { @Content(mediaType = "application/json") }),
+            @ApiResponse(responseCode = "404", description = "Rental not found.", content = { @Content(mediaType = "application/json") }),
+            @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "application/json") })
+    })
     @PutMapping(value = "/{id}", consumes = "multipart/form-data" ,produces = "application/json")
     public ResponseEntity updateRental(@PathVariable Integer id, @ModelAttribute RentalUpdateRequest rentalUpdateRequest){
         System.out.println("avant le try du update");
