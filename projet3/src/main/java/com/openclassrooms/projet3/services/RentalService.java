@@ -14,12 +14,12 @@ import java.util.Optional;
 
 @Service
 public class RentalService {
-    private static final Logger logger = Logger.getLogger(AuthController.class);
+    private static final Logger logger = Logger.getLogger(RentalService.class);
 
     // --------------------------------------
     // Injection de dépendance du repository RentalRepository dans le service
     // --------------------------------------
-    private RentalRepository rentalRepository;
+    private final RentalRepository rentalRepository;
 
     // --------------------------------------
     // Contrôleur

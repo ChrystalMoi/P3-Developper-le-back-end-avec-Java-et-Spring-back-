@@ -8,6 +8,11 @@ import com.openclassrooms.projet3.request.UserLoginRequest;
 import com.openclassrooms.projet3.request.UserRegistrationRequest;
 import com.openclassrooms.projet3.security.JwtTokenProvider;
 import com.openclassrooms.projet3.services.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,7 +38,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Auth", description = "Endpoints related to Authentification")
+@Tag(name = "Auth Controller", description = "Endpoints related to Authentification")
 public class AuthController {
     private static final Logger LOGGER = Logger.getLogger(AuthController.class);
 
@@ -49,6 +54,15 @@ public class AuthController {
 
     // Endpoint pour gérer les requêtes de connexion
     // @ApiOperation(value = "Login to the application", produces = "application/json")
+    @Operation(
+            summary = "User Login",
+            description = "Handles user login requests and returns a JWT token upon successful login.",
+            tags = { "Authentication" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully logged in and returns a JWT token.", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "400", description = "User does not exist.", content = { @Content(mediaType = "text/plain") }),
+            @ApiResponse(responseCode = "401", description = "Invalid password.", content = { @Content(mediaType = "text/plain") })
+    })
     @PostMapping(value = "/login", produces = "application/json")
     public ResponseEntity<String> login(@RequestBody UserLoginRequest userLoginRequest) {
         LOGGER.info("login ok");
@@ -92,8 +106,16 @@ public class AuthController {
      *      - mdp.bdd = mdp.entrée → 200 ok + retourner token
      *      - mdp.bdd != mdp.entrée → 401 Unauthorized
      */
+
     // Endpoint pour gérer les requêtes d'inscription
-    // @ApiOperation(value = "Register a new user", produces = "application/json")
+    @Operation(
+            summary = "User Registration",
+            description = "Handles user registration requests and returns a JWT token upon successful registration.",
+            tags = { "Authentication" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully registered and returns a JWT token.", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "400", description = "User already exists.", content = { @Content(mediaType = "text/plain") })
+    })
     @PostMapping(value = "/register", produces = "application/json")
     public ResponseEntity<String> register(@RequestBody UserRegistrationRequest registrationRequest) {
         try {
@@ -125,7 +147,17 @@ public class AuthController {
      * - retourner en retour de la requete le token jwt
      * La réponse doit être la même que la réponse de Mockoon
      */
-    // @ApiOperation(value = "Get information about the current user", produces = "application/json")
+
+    // Endpoint pour afficher les données de l'user (si connecter)
+    @Operation(
+            summary = "Get User Details",
+            description = "Retrieves details of the authenticated user.",
+            tags = { "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user details.", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "400", description = "User does not exist or is not authenticated.", content = { @Content(mediaType = "text/plain") }),
+            @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "text/plain") })
+    })
     @GetMapping(value = "/me", produces = "application/json")
     public ResponseEntity<String> me(@CurrentSecurityContext SecurityContext context){
         try {
@@ -138,9 +170,6 @@ public class AuthController {
             }
 
             Integer userId = (Integer) auth.getPrincipal();
-
-            // TODO : a supprimer
-            LOGGER.info("Id récupérer : " + userId.toString());
 
             UserEntity reponseUser = authService.meUser(userId);
 
@@ -158,7 +187,6 @@ public class AuthController {
             //500 - erreur côté server
             return ResponseEntity.internalServerError().body("");
         }
-
     }
 
     /**
