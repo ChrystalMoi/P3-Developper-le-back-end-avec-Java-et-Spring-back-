@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,7 +64,6 @@ public class RentalController {
     // Endpoint pour créer un bien de location
     // Correspond à : /rentals
     // Méthode POST
-    // TODO : Voir le owner_id
     // --------------------------------------
     @Operation(
             summary = "Create a new rental",
@@ -75,10 +75,10 @@ public class RentalController {
             @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "text/plain") })
     })
     @PostMapping(produces = "application/json")
-    public ResponseEntity<String> createRental(@ModelAttribute RentalCreationRequest rentalRequest) {
+    public ResponseEntity<String> createRental(@ModelAttribute RentalCreationRequest rentalRequest, Principal principal) {
         try {
             // Enregistre le nouvel objet dans la base de données en utilisant la méthode du service
-            RentalEntity createdRental = rentalService.createRental(rentalRequest);
+            RentalEntity createdRental = rentalService.createRental(rentalRequest, principal.getName());
 
             // Crée un message JSON avec le message de succès
             String jsonResponse = "{\"message\": \"Rental created !\"}";
