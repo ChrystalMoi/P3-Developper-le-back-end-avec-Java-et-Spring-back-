@@ -1,4 +1,4 @@
-# Projet 3 : Développer le back-end avec Java et Spring
+# Projet 3 : Développer le back-end avec Java et Spring - Chrystal BASTID
 
 *Note : Ce README est en cours de rédaction et sera complété prochainement.*
 
