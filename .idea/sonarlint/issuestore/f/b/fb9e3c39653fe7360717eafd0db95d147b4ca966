@@ -1,9 +1,13 @@
 
-L
-java:S3740e"/Provide the parametrized type for this generic.(†áŞ8ÎøòçÒ1
-O
-java:S11352"2Complete the task associated to this TODO comment.(„âà¼8úòçÒ1
+^
+java:S17105"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8ûîßÌÖ1
+^
+java:S1710H"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8ıîßÌÖ1
+^
+java:S1710v"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8ıîßÌÖ1
+_
+java:S1710‰"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8ıîßÌÖ1
 T
-java:S14818"2Remove this unused "createdRental" local variable.(£‹°…úÿÿÿÿ8ŠúòçÒ1
-N
-java:S1481i"1Remove this unused "rentalEntity" local variable.(‹¦ê†8±úòçÒ1
+java:S1481Q"2Remove this unused "createdRental" local variable.(ç‚°–şÿÿÿÿ8àïßÌÖ1
+O
+java:S1481”"1Remove this unused "rentalEntity" local variable.(‹¦ê†8òïßÌÖ1

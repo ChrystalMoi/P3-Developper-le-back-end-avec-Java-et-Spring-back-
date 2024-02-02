@@ -59,3 +59,11 @@ Qprojet3/src/main/java/com/openclassrooms/projet3/request/RentalUpdateRequest.ja
 [projet3/src/main/java/com/openclassrooms/projet3/exception/RentalDoesNotExistException.java,a\a\aa56e4ff505564d94c973231d2581fa874c64ecb
 €
 Pprojet3/src/main/java/com/openclassrooms/projet3/request/MessageSendRequest.java,a\b\ab5865c64199f02bce31146400171dee787b2978
+x
+Hprojet3/src/main/java/com/openclassrooms/projet3/security/JwtFilter.java,0\f\0f1049c10428a1df11ca9d97f9c480a629607854
+t
+Dprojet3/src/main/java/com/openclassrooms/projet3/JwtCoderConfig.java,8\8\882911164d8e4fe39c2a4505db2c82d1c824dd2c
+}
+Mprojet3/src/test/java/com/openclassrooms/projet3/Projet3ApplicationTests.java,7\6\761ae8b257976bf338d42707494087c82806e042
+u
+Eprojet3/src/main/java/com/openclassrooms/projet3/cors/CorsConfig.java,6\f\6f624dcd6076a355b49de1ec1d0dcb6ebb27157e
