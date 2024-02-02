@@ -4,26 +4,26 @@ public class UserLoginRequest {
     // --------------------------------------
     // Champs nécessaire pour une connexion
     // --------------------------------------
-    private String login;
+    private String email;
     private String password;
 
     // --------------------------------------
     // Constructeur avec paramètres pour initialiser les champs lors de la création d'une instance
     // --------------------------------------
-    public UserLoginRequest(String login, String password) {
-        this.login = login;
+    public UserLoginRequest(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
     // --------------------------------------
     // Getter et Setter
     // --------------------------------------
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
