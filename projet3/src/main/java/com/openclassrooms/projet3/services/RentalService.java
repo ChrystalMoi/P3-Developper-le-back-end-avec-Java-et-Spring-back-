@@ -1,9 +1,11 @@
 package com.openclassrooms.projet3.services;
 
-import com.openclassrooms.projet3.controllers.AuthController;
 import com.openclassrooms.projet3.entites.RentalEntity;
+import com.openclassrooms.projet3.entites.UserEntity;
 import com.openclassrooms.projet3.exception.RentalDoesNotExistException;
+import com.openclassrooms.projet3.exception.UserDoesNotExistException;
 import com.openclassrooms.projet3.repositories.RentalRepository;
+import com.openclassrooms.projet3.repositories.UserRepository;
 import com.openclassrooms.projet3.request.RentalCreationRequest;
 import com.openclassrooms.projet3.request.RentalUpdateRequest;
 import org.apache.log4j.Logger;
@@ -20,12 +22,14 @@ public class RentalService {
     // Injection de dépendance du repository RentalRepository dans le service
     // --------------------------------------
     private final RentalRepository rentalRepository;
+    private final UserRepository userRepository;
 
     // --------------------------------------
     // Contrôleur
     // --------------------------------------
-    public RentalService(RentalRepository rentalRepository) {
+    public RentalService(RentalRepository rentalRepository, UserRepository userRepository) {
         this.rentalRepository = rentalRepository;
+        this.userRepository = userRepository;
     }
 
     // --------------------------------------
@@ -56,11 +60,13 @@ public class RentalService {
     // --------------------------------------
     // Méthode pour créer un bien en location
     // --------------------------------------
-    public RentalEntity createRental(RentalCreationRequest rentalRequest) throws IllegalArgumentException {
+    public RentalEntity createRental(RentalCreationRequest rentalRequest, String currentUserEmail) throws IllegalArgumentException {
         // Assure que les données requises sont fournies
         if (!areValidRequestRentalFields(rentalRequest.getName(), rentalRequest.getSurface(), rentalRequest.getPrice())) {
             throw new IllegalArgumentException("Toutes les informations requises ne sont pas renseignées. Merci de tout renseigner.");
         }
+
+        UserEntity currentUser = userRepository.findByEmail(currentUserEmail).orElseThrow(()->new UserDoesNotExistException("User does not exist."));
 
         // Création de l'objet RentalEntity
         RentalEntity rentalEntity = new RentalEntity();
@@ -69,7 +75,7 @@ public class RentalService {
         rentalEntity.setPicture(rentalRequest.getPicture());
         rentalEntity.setSurface(rentalRequest.getSurface());
         rentalEntity.setDescription(rentalRequest.getDescription());
-        rentalEntity.setOwnerId(1); // TODO - à supprimer
+        rentalEntity.setOwnerId(currentUser.getId());
 
         // Enregistre le nouvel objet dans la base de données en utilisant la méthode du repository
         return rentalRepository.save(rentalEntity);
