@@ -8,11 +8,13 @@ import com.openclassrooms.projet3.repositories.UserRepository;
 import com.openclassrooms.projet3.request.UserLoginRequest;
 import com.openclassrooms.projet3.request.UserRegistrationRequest;
 import com.openclassrooms.projet3.security.JwtTokenProvider;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -45,6 +47,7 @@ public class AuthService {
      * - retourner en retour de la requete le token jwt
      * La réponse doit être la même que la réponse de Mockoon
      */
+    @Transactional
     public String registerUser(UserRegistrationRequest registrationRequest) throws UserAlreadyExistsException {
         // Vérification si l'utilisateur existe déjà dans la base de données (ici par email)
         if (userRepository.existsByEmail(registrationRequest.getEmail())) {
@@ -56,16 +59,20 @@ public class AuthService {
             throw new IllegalArgumentException("Toutes les informations (email, nom et mot de passe) sont requises. Merci de tout renseigner.");
         }
 
+        Timestamp temps = Timestamp.valueOf(LocalDateTime.now());
+
         // Crée un nouvel utilisateur via UserEntity
         UserEntity user = new UserEntity();
         user.setEmail(registrationRequest.getEmail());
         user.setName(registrationRequest.getName());
         user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+        user.setCreatedAt(temps);
+        user.setUpdatedAt(temps);
 
         // Enregistre l'utilisateur dans la base de données
         userRepository.save(user);
 
-        // Génère un token JWT
+        // Génère un token JWT uniquement si l'user est créable
         return jwtTokenProvider.generateToken(user);
     }
 
@@ -83,14 +90,14 @@ public class AuthService {
      */
     public String loginUser(UserLoginRequest userLoginRequest) throws UserDoesNotExistException, InvalidPasswordException {
         // S'il n'y a pas d'entrée avec l'email dans la bdd alors lancement de l'exception
-        if (!userRepository.existsByEmail(userLoginRequest.getLogin())) {
+        if (!userRepository.existsByEmail(userLoginRequest.getEmail())) {
             throw new UserDoesNotExistException("L'utilisateur avec ce mail n'existe pas.");
         }
 
         // Vérification si l'utilisateur existe déjà dans la base de données (ici par email=login)
         else{
             // Récupérer l'objet user qui correspond au mail (en utilisant userRepository)
-            Optional<UserEntity> optionalBddUser = userRepository.findByEmail(userLoginRequest.getLogin());
+            Optional<UserEntity> optionalBddUser = userRepository.findByEmail(userLoginRequest.getEmail());
 
             // Vérification que le Optional n'est pas vide
             if(optionalBddUser.isEmpty()){
