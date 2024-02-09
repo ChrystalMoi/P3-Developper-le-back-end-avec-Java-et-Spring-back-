@@ -39,13 +39,20 @@ public class AuthService {
     }
 
     /**
-     * Register doit dans register()
-     * (pas de code métier dans le controller donc il faut appeler un service
-     * register où il y a le code métier) :
-     * - créer un user en base
-     * - générer un token jwt
-     * - retourner en retour de la requete le token jwt
-     * La réponse doit être la même que la réponse de Mockoon
+     * Enregistre un nouvel utilisateur dans la base de données. <br>
+     *
+     * Vérifie d'abord si l'utilisateur n'existe pas déjà dans la base de données en vérifiant l'unicité de son adresse e-mail. <br>
+     * Si l'utilisateur existe déjà, une exception UserAlreadyExistsException est levée. <br>
+     * Vérifie également que toutes les informations nécessaires (adresse e-mail, nom et mot de passe) sont fournies dans la demande d'inscription. <br> <br>
+     * Si des informations sont manquantes, une IllegalArgumentException est levée. <br>
+     * Crée ensuite un nouvel utilisateur avec les informations fournies dans la demande d'inscription, encode le mot de passe,
+     * et enregistre l'utilisateur dans la base de données avec la date et l'heure actuelles. <br>
+     * Enfin, génère un token JWT pour l'utilisateur nouvellement créé et le renvoie. <br>
+     *
+     * @param registrationRequest La demande d'inscription contenant les informations de l'utilisateur à enregistrer.
+     * @return String - Le token JWT généré pour l'utilisateur nouvellement enregistré.
+     * @throws UserAlreadyExistsException Si un utilisateur avec la même adresse e-mail existe déjà dans la base de données.
+     * @throws IllegalArgumentException Si des informations requises (adresse e-mail, nom ou mot de passe) sont manquantes dans la demande d'inscription.
      */
     @Transactional
     public String registerUser(UserRegistrationRequest registrationRequest) throws UserAlreadyExistsException {
@@ -77,16 +84,12 @@ public class AuthService {
     }
 
     /**
-     * Login doit dans login()
-     * (pas de code métier dans le controller donc il faut appeler un service
-     * login où il y a le code métier) :
-     * - vérifier que login(email) et mdp sont bien entrée
-     *      - si pas bien entrée - 400 bad request
-     * - récupérer le mot de passe dans la bdd par rapport à l'email entré
-     *      - si user non inscrit → 404 not found
-     * - comparer le mot de passe de l'entrée avec celui de la bdd (bcrypt)
-     *      - mdp.bdd = mdp.entrée → 200 ok + retourner token
-     *      - mdp.bdd != mdp.entrée → 401 Unauthorized
+     * Authentifie un utilisateur avec les informations de connexion fournies.
+     *
+     * @param userLoginRequest Les informations de connexion de l'utilisateur.
+     * @return Le token JWT généré pour l'utilisateur authentifié.
+     * @throws UserDoesNotExistException Si l'utilisateur n'existe pas dans la base de données.
+     * @throws InvalidPasswordException Si le mot de passe fourni est invalide.
      */
     public String loginUser(UserLoginRequest userLoginRequest) throws UserDoesNotExistException, InvalidPasswordException {
         // S'il n'y a pas d'entrée avec l'email dans la bdd alors lancement de l'exception
@@ -123,17 +126,15 @@ public class AuthService {
         }
     }
 
+    /**
+     * Permet de donner les informations de l'utilisateur connecté
+     *
+     * @param userId
+     * @return UserEntity - L'utilisateur avec l'id du paramètre.
+     * @throws UserDoesNotExistException - si l'utilisateur n'est pas dans la base de données.
+     */
     public UserEntity meUser(Integer userId) throws UserDoesNotExistException{
-        // Dans idToken, on stocke l'utilisateur avec le même id que celui du claim
-        //int idToken = Integer.parseInt(token.getClaimAsString("id"));
-
-        // On cherche dans la bdd un user avec le même id que celui du token
-        Optional<UserEntity> optionalUser = userRepository.findById(userId);
-
-        if(!optionalUser.isPresent()){
-            throw new UserDoesNotExistException("User introuvable");
-        } else {
-            return optionalUser.get();
-        }
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserDoesNotExistException("User introuvable"));
     }
 }

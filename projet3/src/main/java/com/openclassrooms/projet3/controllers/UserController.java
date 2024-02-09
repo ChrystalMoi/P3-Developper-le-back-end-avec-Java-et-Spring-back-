@@ -47,7 +47,7 @@ public class UserController {
     public List<UserEntity> getAllUsers() {
         return userService.getAllUsers();
     }
-    
+
     /**
      * Endpoint pour récupérer un utilisateur par son ID. <br>
      * Cette méthode GET permet de récupérer un utilisateur par son identifiant. <br>
