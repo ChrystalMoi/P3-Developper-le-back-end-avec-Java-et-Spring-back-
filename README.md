@@ -62,8 +62,8 @@ spring.datasource.password=votre_mot_de_passe
 
 ### Lancer l'application
 
-Utilisez la commande Maven pour lancer l'application Spring Boot : ```mvn install```
-
+Utilisez la commande Maven pour télécharger les dépendances du projet : ```mvn install```
+Puis lancer l'application depuis votre ide (intellij).
 ---
 
 ## Utilisation
