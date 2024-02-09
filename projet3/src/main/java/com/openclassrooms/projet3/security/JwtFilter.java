@@ -35,6 +35,20 @@ public class JwtFilter extends OncePerRequestFilter {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Cette méthode est responsable de la gestion de l'authentification des requêtes entrantes. <br>
+     * Elle vérifie la présence et la validité du jeton d'authentification dans l'en-tête de la requête. <br>  <br>
+     * Si le jeton est valide, elle extrait l'identifiant de l'utilisateur à partir du jeton, recherche l'utilisateur correspondant dans la base de données,
+     * puis authentifie cet utilisateur dans le contexte de sécurité Spring.  <br>
+     * Si le jeton est invalide ou s'il n'est pas présent, elle laisse passer la requête sans authentification. <br> <br>
+     * En cas d'erreur lors de la validation du jeton ou lors de l'initialisation du contexte de sécurité, elle enregistre un message d'erreur mais laisse passer la requête. <br>
+     *
+     * @param request     HttpServletRequest - La requête HTTP entrante.
+     * @param response    HttpServletResponse - La réponse HTTP sortante.
+     * @param filterChain FilterChain - Le filtre de chaîne utilisé pour passer la demande au filtre suivant.
+     * @throws ServletException Si une erreur de servlet se produit.
+     * @throws IOException      Si une erreur d'entrée/sortie se produit.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // Recuperation du header (du début) de la requête http

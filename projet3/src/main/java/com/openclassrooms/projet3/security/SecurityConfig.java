@@ -21,6 +21,16 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
+    /**
+     * Configure et retourne un filtre de sécurité pour gérer les requêtes HTTP entrantes. <br> <br>
+     * Ce filtre désactive la protection CSRF (Cross-Site Request Forgery), la connexion par formulaire, et configure la gestion des sessions comme Stateless. <br>
+     * De plus, il ajoute un filtre JWT (JSON Web Token) avant le filtre d'authentification par nom d'utilisateur/mot de passe. <br>
+     * Enfin, il définit les autorisations pour les différentes requêtes HTTP, en permettant l'accès aux endpoints d'inscription, de connexion, de récupération des informations utilisateur (profil), ainsi qu'aux endpoints Swagger. <br>
+     * <br>
+     * @param http HttpSecurity - Le constructeur de configuration de sécurité HTTP à utiliser pour configurer le filtre.
+     * @return SecurityFilterChain - Le filtre de sécurité configuré.
+     * @throws Exception Si une erreur se produit lors de la configuration de la sécurité HTTP.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -35,38 +45,9 @@ public class SecurityConfig {
                 .build();
     }
 
-    /*@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/auth/register").permitAll();
-                    auth.requestMatchers("/api/auth/login").permitAll();
-                    auth.requestMatchers("/api/rentals").permitAll();
-                    auth.requestMatchers("/api/rentals/{id}").permitAll();
-                    auth.requestMatchers("/api/messages").permitAll();
-                    auth.requestMatchers("/api/user/{id}").permitAll();
-                    auth.anyRequest().authenticated();
-                } )
-                //.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-                .build();
-    }*/
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    /*
-    @Value("${jwt.secretKey}")
-    private String secretKey;
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(this.secretKey.getBytes(), 0, this.secretKey.getBytes().length, "RSA");
-        return NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS256).build();
-    }*/
 
 }

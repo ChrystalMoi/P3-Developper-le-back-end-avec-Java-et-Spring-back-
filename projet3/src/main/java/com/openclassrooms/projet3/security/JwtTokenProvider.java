@@ -34,6 +34,15 @@ public class JwtTokenProvider {
     private long expirationInMs;
 
     // Génère un token JWT en fonction de l'adresse e-mail de l'utilisateur
+
+    /**
+     * Génère un jeton JWT (JSON Web Token) pour l'utilisateur donné. <br>
+     * Ce jeton contient les revendications (claims) pertinentes pour l'utilisateur, telles que son identifiant, son nom, son adresse e-mail, et les horodatages de création et de mise à jour. <br>
+     * Le jeton est signé avec un algorithme HMAC SHA-256.
+     *
+     * @param userEntity L'entité représentant l'utilisateur pour lequel générer le jeton JWT.
+     * @return String - Le jeton JWT généré, encodé sous forme de chaîne de caractères.
+     */
     public String generateToken(UserEntity userEntity) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
