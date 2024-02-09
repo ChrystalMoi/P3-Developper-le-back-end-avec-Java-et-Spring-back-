@@ -1,12 +1,9 @@
 package com.openclassrooms.projet3.controllers;
 
-import com.openclassrooms.projet3.entites.MessageEntity;
 import com.openclassrooms.projet3.entites.UserEntity;
 import com.openclassrooms.projet3.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,9 +28,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    // --------------------------------------
-    // Endpoint pour récupérer tous les utilisateurs
-    // --------------------------------------
+    /**
+     * Endpoint pour récupérer tous les utilisateurs. <br>
+     * Cette méthode GET permet de récupérer une liste de tous les utilisateurs.
+     *
+     * @return List<UserEntity> - La liste des utilisateurs récupérés. <br>
+     * Si aucun utilisateur n'est trouvé, une liste vide est retournée.
+     */
     @Operation(
             summary = "Get All Users",
             description = "Handles requests to retrieve a list of all users.",
@@ -44,14 +45,19 @@ public class UserController {
     })
     @GetMapping
     public List<UserEntity> getAllUsers() {
-        // Appel à la méthode getAllUsers() du service UserService
         return userService.getAllUsers();
     }
-
-    // --------------------------------------
-    // Endpoint pour récupérer un utilisateur par son ID
-    // Correspond à : /user/:id
-    // --------------------------------------
+    
+    /**
+     * Endpoint pour récupérer un utilisateur par son ID. <br>
+     * Cette méthode GET permet de récupérer un utilisateur par son identifiant. <br>
+     *
+     * Correspond à : /user/:id
+     *
+     * @param id L'identifiant de l'utilisateur à récupérer.
+     * @return Optional<UserEntity> - L'objet représentant l'utilisateur récupéré, s'il existe. <br>
+     *                              Si aucun utilisateur correspondant à l'ID donné n'est trouvé, Optional.empty() est retourné.
+     */
     @Operation(
             summary = "Get User by ID",
             description = "Handles requests to retrieve a user by their ID.",

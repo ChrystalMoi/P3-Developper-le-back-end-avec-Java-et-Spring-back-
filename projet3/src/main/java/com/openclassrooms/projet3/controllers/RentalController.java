@@ -23,13 +23,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.security.Principal;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,11 +47,15 @@ public class RentalController {
         this.rentalService = rentalService;
     }
 
-    // --------------------------------------
-    // Endpoint pour récupérer tous les biens en location
-    // Correspond à : /rentals
-    // Méthode GET
-    // --------------------------------------
+    /**
+     * Endpoint pour obtenir toutes les locations. <br>
+     * Cette méthode GET permet de récupérer une liste de toutes les entités de location. <br>
+     * Correspond à : /rentals
+     *
+     * @return ResponseEntity<String> - Réponse HTTP contenant la liste des locations au format
+     * JSON en cas de succès. <br>
+     * En cas d'erreur interne du serveur, une réponse avec un code d'erreur approprié est renvoyée.
+     */
     @Operation(
             summary = "Get All Rentals",
             description = "Retrieves a list of all rental entities.",
@@ -66,7 +66,6 @@ public class RentalController {
     })
     @GetMapping(produces = "application/json")
     public ResponseEntity<String> getAllRentals() {
-        // TODO : Pourquoi le picture dans le front est en string et pas en un tableau/image/etc
         try{
             List<RentalResponse> listGetAll = rentalService.getAllRentals();
 
@@ -87,11 +86,16 @@ public class RentalController {
         }
     }
 
-    // --------------------------------------
-    // Endpoint pour créer un bien de location
-    // Correspond à : /rentals
-    // Méthode POST
-    // --------------------------------------
+    /**
+     * Endpoint pour créer un bien de location. <br>
+     * Cette méthode POST permet de créer une nouvelle entité de location. <br>
+     * Correspond à : /rentals
+     * @param rentalRequest     Les détails de la demande de création de location.
+     * @param principal         L'utilisateur principal effectuant la demande.
+     * @return ResponseEntity<String> Une réponse HTTP indiquant le succès ou l'échec de la création de la location. <br>
+     *                                 En cas de succès, un message JSON est retourné indiquant que la location a été créée avec succès. <br>
+     *                                 En cas d'erreur, une réponse avec un code d'erreur approprié est renvoyée, accompagnée d'un message d'erreur.
+     */
     @Operation(
             summary = "Create a new rental",
             description = "Creates a new rental entity.",
@@ -129,18 +133,13 @@ public class RentalController {
     }
 
     /**
-     * CreateRentals doit dans createRental()
-     * (pas de code métier dans le controller donc il faut appeler un service où il y a le code métier) :
-     * - créer un bien en base
-     * - retourner en retour de la requete un message : Rental created !
-     * La réponse doit être la même que la réponse de Mockoon
+     * Endpoint pour récupérer un bien en location par son ID. <br>
+     * Cette méthode GET permet de récupérer une entité de location par son identifiant. <br>
+     * Correspond à : /rentals/:id
+     * @param id L'identifiant du bien en location à récupérer.
+     * @return Optional<RentalEntity> - L'objet représentant le bien en location récupéré, s'il existe. <br>
+     *                                Si aucun bien en location correspondant à l'ID donné n'est trouvé, Optional.empty() est retourné.
      */
-
-    // --------------------------------------
-    // Endpoint pour récupérer un bien en location par son ID
-    // Correspond à : /rentals/:id
-    // Méthode GET
-    // --------------------------------------
     @Operation(
             summary = "Get Rental by ID",
             description = "Retrieves a rental entity by its ID.",
@@ -154,12 +153,20 @@ public class RentalController {
         return rentalService.getRentalById(id);
     }
 
-    // --------------------------------------
-    // Endpoint pour mettre à jour (update) un bien en location par son ID
-    // Correspond à : /rentals/:id
-    // Méthode PUT
-    // @ModelAttribute = multipart (form-data avec différents type de variable)
-    // --------------------------------------
+    /**
+     * Endpoint pour mettre à jour (update) un bien en location par son ID. <br>
+     * Cette méthode PUT permet de mettre à jour une entité de location par son identifiant. <br>
+     *
+     * Correspond à : /rentals/:id
+     * @ModelAttribute = multipart (form-data avec différents types de variables)
+     *
+     * @param id L'identifiant du bien en location à mettre à jour.
+     * @param rentalUpdateRequest Les détails de la demande de mise à jour du bien en location.
+     *
+     * @return ResponseEntity - Une réponse HTTP indiquant le succès ou l'échec de la mise à jour du bien en location. <br>
+     *                        En cas de succès, un message JSON est retourné indiquant que la location a été mise à jour avec succès. <br>
+     *                        En cas d'erreur, une réponse avec un code d'erreur approprié est renvoyée, accompagnée d'un message d'erreur.
+     */
     @Operation(
             summary = "Update Rental by ID",
             description = "Updates a rental entity by its ID.",
@@ -172,7 +179,6 @@ public class RentalController {
     })
     @PutMapping(value = "/{id}", consumes = "multipart/form-data" ,produces = "application/json")
     public ResponseEntity updateRental(@PathVariable Integer id, @ModelAttribute RentalUpdateRequest rentalUpdateRequest){
-        System.out.println("avant le try du update");
 
         try {
             RentalEntity rentalEntity = rentalService.updateRental(rentalUpdateRequest, id);

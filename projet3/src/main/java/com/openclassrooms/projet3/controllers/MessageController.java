@@ -32,6 +32,13 @@ public class MessageController {
         this.messageService = messageService;
     }
 
+    /**
+     * Opération pour obtenir tous les messages. <br>
+     * Cette méthode GET permet de récupérer une liste de tous les messages.
+     *
+     * @return List<MessageEntity> - Liste des messages récupérés.
+     * @throws Exception En cas d'erreur interne du serveur.
+     */
     @Operation(
             summary = "Get All Messages",
             description = "Retrieves a list of all messages.",
@@ -45,6 +52,14 @@ public class MessageController {
         return messageService.getAllMessages();
     }
 
+    /**
+     * Opération pour envoyer un nouveau message.  <br>
+     * Cette méthode POST gère les requêtes pour envoyer un message.
+     *
+     * @param messageSendRequest L'objet de requête contenant les informations sur le message à envoyer.
+     * @return ResponseEntity - Une réponse HTTP indiquant le succès ou l'échec de l'envoi du message.
+     * @throws IllegalArgumentException Si les données requises ne sont pas renseignées correctement.
+     */
     @Operation(
             summary = "Send a new Message",
             description = "Handles requests to send a message.",
@@ -67,7 +82,8 @@ public class MessageController {
             return ResponseEntity.ok(jsonResponse);
 
         } catch (IllegalArgumentException e) {
-            // En cas d'erreur de données requises non renseignées, retourne une réponse avec le message d'erreur
+            // En cas d'erreur de données requises non renseignées,
+            // retourne une réponse avec le message d'erreur
             String errorResponse = "{\"message\": \"" + e.getMessage() + "\"}";
             return ResponseEntity.badRequest().body(errorResponse);
 
@@ -78,6 +94,13 @@ public class MessageController {
         }
     }
 
+    /**
+     * Opération pour obtenir un message par son identifiant. <br>
+     * Cette méthode GET gère les requêtes pour récupérer un message par son identifiant.
+     *
+     * @param id L'identifiant du message à récupérer.
+     * @return Optional<MessageEntity> - L'objet représentant le message récupéré, s'il existe.
+     */
     @Operation(
             summary = "Get Message by ID",
             description = "Handles requests to retrieve a message by its ID.",
