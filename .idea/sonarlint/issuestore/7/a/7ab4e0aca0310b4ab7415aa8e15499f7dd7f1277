@@ -1,11 +1,7 @@
 
-Ž
-java:S1130,"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(ŸÕòÀþÿÿÿÿ8Çä¼îØ1
-·
-java:S1130,"”Remove the declaration of thrown exception 'com.openclassrooms.projet3.exception.ImageNotFoundException', as it cannot be thrown from method's body.(ŸÕòÀþÿÿÿÿ8Êä¼îØ1
-]	java:S1255"<This block of commented-out lines of code should be removed.(‚Ôšèúÿÿÿÿ8×ä¼îØ1
-G
-java:S1481e"*Remove this unused "image" local variable.(¬‚×£8Ú¬®îØ1
-X	java:S125ˆ"<This block of commented-out lines of code should be removed.(œÍ8Å¼æÒØ1
+²
+java:S1130,"”Remove the declaration of thrown exception 'com.openclassrooms.projet3.exception.ImageNotFoundException', as it cannot be thrown from method's body.(ŒÈ¿Ê8Êä¼îØ1
 L
 java:S1068"*Remove this unused "logger" private field.(Îâ×ýÿÿÿÿ8Ê¼æÒØ1
+K
+java:S1068"0Remove this unused "imageService" private field.(Ô}8éê—õØ1
