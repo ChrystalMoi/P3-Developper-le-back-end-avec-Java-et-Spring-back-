@@ -2,15 +2,19 @@ package com.openclassrooms.projet3.services;
 
 import com.openclassrooms.projet3.entites.RentalEntity;
 import com.openclassrooms.projet3.entites.UserEntity;
+import com.openclassrooms.projet3.exception.ImageNotFoundException;
 import com.openclassrooms.projet3.exception.RentalDoesNotExistException;
 import com.openclassrooms.projet3.exception.UserDoesNotExistException;
 import com.openclassrooms.projet3.repositories.RentalRepository;
 import com.openclassrooms.projet3.repositories.UserRepository;
 import com.openclassrooms.projet3.request.RentalCreationRequest;
 import com.openclassrooms.projet3.request.RentalUpdateRequest;
+import com.openclassrooms.projet3.response.RentalResponse;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,24 +23,52 @@ public class RentalService {
     private static final Logger logger = Logger.getLogger(RentalService.class);
 
     // --------------------------------------
-    // Injection de dépendance du repository RentalRepository dans le service
+    // Injection de dépendances dans le service
     // --------------------------------------
     private final RentalRepository rentalRepository;
     private final UserRepository userRepository;
+    private final ImageService imageService;
 
     // --------------------------------------
     // Contrôleur
     // --------------------------------------
-    public RentalService(RentalRepository rentalRepository, UserRepository userRepository) {
+    public RentalService(RentalRepository rentalRepository, UserRepository userRepository, ImageService imageService) {
         this.rentalRepository = rentalRepository;
         this.userRepository = userRepository;
+        this.imageService = imageService;
     }
 
     // --------------------------------------
     // Méthode pour récupérer tous les biens en location
     // --------------------------------------
-    public List<RentalEntity> getAllRentals() {
-        return rentalRepository.findAll();
+    public List<RentalResponse> getAllRentals() throws IOException, ImageNotFoundException {
+        // On stock la liste des rentals entities dans une variable
+        List<RentalEntity> rentalEntities = rentalRepository.findAll();
+
+        List<RentalResponse> rentalResponses = new ArrayList<>();
+
+        // Pour chaque variable rentalEntity de type RentalEntity dans la liste rentalEntities
+        for (RentalEntity rentalEntity : rentalEntities) {
+            // Récupération image du dossier
+            //String image = imageService.getImage(rentalEntity.getPicture());
+
+            // Création de l'objet rentalResponse
+            RentalResponse rentalResponse = new RentalResponse(
+                    rentalEntity.getId(),
+                    rentalEntity.getName(),
+                    rentalEntity.getSurface(),
+                    rentalEntity.getPrice(),
+                    rentalEntity.getPicture(),
+                    rentalEntity.getDescription(),
+                    rentalEntity.getOwnerId(),
+                    rentalEntity.getCreatedAt(),
+                    rentalEntity.getUpdatedAt());
+
+            // Ajoute l'objet rentalResponse à la liste RentalResponses
+            rentalResponses.add(rentalResponse);
+        }
+
+        return rentalResponses;
     }
 
     // --------------------------------------
@@ -50,29 +82,29 @@ public class RentalService {
     // Méthode pour la vérification des entrées d'une requête
     // --------------------------------------
     private boolean areValidRequestRentalFields(String name, Double surface, Double price){
-        logger.info("areValidRequestRentalFields (name.equals(\"\")) : " + name.equals(""));
-        logger.info("areValidRequestRentalFields (name) : " + name);
-        logger.info("areValidRequestRentalFields (surface) : " + surface);
-        logger.info("areValidRequestRentalFields (price) : " + price);
         return surface != null && price != null && !name.equals("") && surface > 0 && price > 0;
     }
 
     // --------------------------------------
     // Méthode pour créer un bien en location
     // --------------------------------------
-    public RentalEntity createRental(RentalCreationRequest rentalRequest, String currentUserEmail) throws IllegalArgumentException {
+    public RentalEntity createRental(RentalCreationRequest rentalRequest, String currentUserId) throws IllegalArgumentException, IOException {
         // Assure que les données requises sont fournies
         if (!areValidRequestRentalFields(rentalRequest.getName(), rentalRequest.getSurface(), rentalRequest.getPrice())) {
             throw new IllegalArgumentException("Toutes les informations requises ne sont pas renseignées. Merci de tout renseigner.");
         }
 
-        UserEntity currentUser = userRepository.findByEmail(currentUserEmail).orElseThrow(()->new UserDoesNotExistException("User does not exist."));
+        UserEntity currentUser = userRepository.findById(Integer.valueOf(currentUserId))
+                .orElseThrow(()->new UserDoesNotExistException("User does not exist."));
+
+        // On récupère le fichier image de la requête et on l'enregistre dans le dossier
+        String image = imageService.sauvegardeImageDansDossier(rentalRequest.getPicture());
 
         // Création de l'objet RentalEntity
         RentalEntity rentalEntity = new RentalEntity();
         rentalEntity.setName(rentalRequest.getName());
         rentalEntity.setPrice(rentalRequest.getPrice());
-        rentalEntity.setPicture(rentalRequest.getPicture());
+        rentalEntity.setPicture("https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg");
         rentalEntity.setSurface(rentalRequest.getSurface());
         rentalEntity.setDescription(rentalRequest.getDescription());
         rentalEntity.setOwnerId(currentUser.getId());

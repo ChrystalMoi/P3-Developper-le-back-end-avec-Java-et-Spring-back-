@@ -1,9 +1,12 @@
 package com.openclassrooms.projet3.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.projet3.entites.RentalEntity;
+import com.openclassrooms.projet3.exception.ImageNotFoundException;
 import com.openclassrooms.projet3.exception.RentalDoesNotExistException;
 import com.openclassrooms.projet3.request.RentalCreationRequest;
 import com.openclassrooms.projet3.request.RentalUpdateRequest;
+import com.openclassrooms.projet3.response.RentalResponse;
 import com.openclassrooms.projet3.services.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -12,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,9 +23,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +37,8 @@ import java.util.Optional;
 @RequestMapping("/api/rentals")
 @Tag(name = "Rentals Controller", description = "Endpoints related to Rentals")
 public class RentalController {
+    private static final Logger LOGGER = Logger.getLogger(RentalController.class);
+
     // --------------------------------------
     // Injection de dépendance du service RentalService
     // --------------------------------------
@@ -54,10 +64,27 @@ public class RentalController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of rentals.", content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RentalEntity.class))) }),
             @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "text/plain") })
     })
-    @GetMapping
-    public List<RentalEntity> getAllRentals() {
-        // Appel à la méthode de RentalService
-        return rentalService.getAllRentals();
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<String> getAllRentals() {
+        // TODO : Pourquoi le picture dans le front est en string et pas en un tableau/image/etc
+        try{
+            List<RentalResponse> listGetAll = rentalService.getAllRentals();
+
+            String response = new ObjectMapper().writeValueAsString(listGetAll);
+
+            String jsonResponse = "{\"rentals\": " + response +"}";
+
+            // Appel à la méthode de RentalService
+            return ResponseEntity.ok().body(jsonResponse);
+        }
+        catch (ImageNotFoundException e) {
+            LOGGER.error("ImageNotFoundException : " + e);
+            return ResponseEntity.badRequest().build();
+        }
+        catch (Exception e) {
+            LOGGER.error("Exception : "+ e);
+            return ResponseEntity.status(500).build();
+        }
     }
 
     // --------------------------------------
@@ -76,6 +103,7 @@ public class RentalController {
     })
     @PostMapping(produces = "application/json")
     public ResponseEntity<String> createRental(@ModelAttribute RentalCreationRequest rentalRequest, Principal principal) {
+
         try {
             // Enregistre le nouvel objet dans la base de données en utilisant la méthode du service
             RentalEntity createdRental = rentalService.createRental(rentalRequest, principal.getName());
@@ -89,11 +117,13 @@ public class RentalController {
         } catch (IllegalArgumentException e) {
             // En cas d'erreur de données requises non renseignées, retourne une réponse avec le message d'erreur
             String errorResponse = "{\"message\": \"" + e.getMessage() + "\"}";
+            LOGGER.error("IllegalArgumentException : " + e);
             return ResponseEntity.badRequest().body(errorResponse);
 
         } catch (Exception e) {
             // En cas d'autres erreurs, retourne une réponse avec le message d'erreur
             String errorResponse = "{\"message\": \"Une erreur s'est produite lors de la création du bien locatif.\"}";
+            LOGGER.error("Exception : "+ e);
             return ResponseEntity.status(500).body(errorResponse);
         }
     }
