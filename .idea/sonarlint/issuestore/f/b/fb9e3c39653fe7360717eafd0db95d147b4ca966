@@ -1,13 +1,23 @@
 
 ^
-java:S17105"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8ûîßÌÖ1
+java:S1710?"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8° îØ1
 ^
-java:S1710H"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8ıîßÌÖ1
-^
-java:S1710v"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8ıîßÌÖ1
+java:S1710c"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8± îØ1
 _
-java:S1710‰"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8ıîßÌÖ1
+java:S1710”"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8² îØ1
+_
+java:S1710§"<Remove the 'ApiResponses' wrapper from this annotation group(Å¬†—üÿÿÿÿ8² îØ1
 T
-java:S1481Q"2Remove this unused "createdRental" local variable.(ç‚°–şÿÿÿÿ8àïßÌÖ1
+java:S1135E"2Complete the task associated to this TODO comment.(†Üİúÿÿÿÿ8¡îØ1
+T
+java:S1481m"2Remove this unused "createdRental" local variable.(ç‚°–şÿÿÿÿ8ø¡îØ1
 O
-java:S1481”"1Remove this unused "rentalEntity" local variable.(‹¦ê†8òïßÌÖ1
+java:S1481²"1Remove this unused "rentalEntity" local variable.(‹¦ê†8Š¢îØ1
+s
+java:S1128"QRemove this unused import 'org.springframework.web.bind.annotation.RequestParam'.(Â¬À·ùÿÿÿÿ8‘¢îØ1
+n
+java:S1128"LRemove this unused import 'org.springframework.web.multipart.MultipartFile'.(ôŸœÿÿÿÿÿ8’¢îØ1
+R
+java:S1128"0Remove this unused import 'java.io.IOException'.(ªº»Úıÿÿÿÿ8“¢îØ1
+J
+java:S1128 "-Remove this unused import 'java.util.Base64'.(ëŠ»Õ8”¢îØ1

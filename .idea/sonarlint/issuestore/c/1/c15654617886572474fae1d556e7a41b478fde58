@@ -1,0 +1,9 @@
+
+…
+java:S1488+"cImmediately return this expression instead of assigning it to the temporary variable "concatImage".(ÃÇ›‹úÿÿÿÿ8µžˆíØ1
+‰
+java:S1130'"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(ò”ûú8ðí‡íØ1
+²
+java:S1130'"”Remove the declaration of thrown exception 'com.openclassrooms.projet3.exception.ImageNotFoundException', as it cannot be thrown from method's body.(ò”ûú8òí‡íØ1
+R
+java:S1481)"0Remove this unused "cheminImage" local variable.(Éï†°þÿÿÿÿ8“×‰íØ1

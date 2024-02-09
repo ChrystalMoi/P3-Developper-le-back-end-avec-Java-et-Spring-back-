@@ -1,2 +1,11 @@
 
-W	java:S125h"<This block of commented-out lines of code should be removed.(œÍ8İ–ÛÍÖ1
+
+java:S1130,"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(ŸÕòÀşÿÿÿÿ8Çä¼îØ1
+·
+java:S1130,"”Remove the declaration of thrown exception 'com.openclassrooms.projet3.exception.ImageNotFoundException', as it cannot be thrown from method's body.(ŸÕòÀşÿÿÿÿ8Êä¼îØ1
+]	java:S1255"<This block of commented-out lines of code should be removed.(‚Ôšèúÿÿÿÿ8×ä¼îØ1
+G
+java:S1481e"*Remove this unused "image" local variable.(¬‚×£8Ú¬®îØ1
+X	java:S125ˆ"<This block of commented-out lines of code should be removed.(œÍ8Å¼æÒØ1
+L
+java:S1068"*Remove this unused "logger" private field.(Îâ×ıÿÿÿÿ8Ê¼æÒØ1

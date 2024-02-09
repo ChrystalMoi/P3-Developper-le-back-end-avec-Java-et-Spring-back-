@@ -67,3 +67,9 @@ Dprojet3/src/main/java/com/openclassrooms/projet3/JwtCoderConfig.java,8\8\88291
 Mprojet3/src/test/java/com/openclassrooms/projet3/Projet3ApplicationTests.java,7\6\761ae8b257976bf338d42707494087c82806e042
 u
 Eprojet3/src/main/java/com/openclassrooms/projet3/cors/CorsConfig.java,6\f\6f624dcd6076a355b49de1ec1d0dcb6ebb27157e
+{
+Kprojet3/src/main/java/com/openclassrooms/projet3/services/ImageService.java,c\1\c15654617886572474fae1d556e7a41b478fde58
+†
+Vprojet3/src/main/java/com/openclassrooms/projet3/exception/ImageNotFoundException.java,c\5\c583176b4e22771114cec229d6cf7adbc9bb4a01
+}
+Mprojet3/src/main/java/com/openclassrooms/projet3/response/RentalResponse.java,9\6\9627504d811febecbe700f2d9420d13bc56cc993
