@@ -1,19 +1,21 @@
 package com.openclassrooms.projet3.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class RentalCreationRequest {
     // --------------------------------------
-    // Champs nécessaire pour l'ajout d'un bien
+    // Champs nécessaire pour l'ajout d'un bien - flux entré
     // --------------------------------------
     private String name;
     private Double surface;
     private Double price;
-    private String picture;
+    private MultipartFile picture;
     private String description;
 
     // --------------------------------------
     // Constructeur avec paramètres pour initialiser les champs lors de la création d'une instance
     // --------------------------------------
-    public RentalCreationRequest(String name, Double surface, Double price, String picture, String description) {
+    public RentalCreationRequest(String name, Double surface, Double price, MultipartFile picture, String description) {
         this.name = name;
         this.surface = surface;
         this.price = price;
@@ -49,11 +51,11 @@ public class RentalCreationRequest {
         this.price = price;
     }
 
-    public String getPicture() {
+    public MultipartFile getPicture() {
         return picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(MultipartFile picture) {
         this.picture = picture;
     }
 
