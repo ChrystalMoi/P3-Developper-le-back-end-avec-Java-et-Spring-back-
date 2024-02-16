@@ -13,6 +13,7 @@
 4. [Utilisation](#utilisation)
     - [Accéder à l'application](#accéder-à-lapplication)
     - [Endpoints disponibles](#endpoints-disponibles)
+    - [Swagger](#swagger)
 
 ---
 
@@ -98,4 +99,7 @@ Une fois l'application lancée, vous pouvez accéder à l'API à l'adresse suiva
 
 - Détails d'un utilisateur : `/api/user/:id` (GET) - Endpoint pour obtenir les détails d'un utilisateur.
 
+### Swagger
 
+Le swagger est visionable une fois que le projet est lancé sur le port 8080.
+Lien du swagger : ```http://localhost:8080/swagger-ui.html```
