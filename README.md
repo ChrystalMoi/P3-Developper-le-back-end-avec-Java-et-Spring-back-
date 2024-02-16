@@ -1,7 +1,5 @@
 # Projet 3 : Développer le back-end avec Java et Spring - Chrystal BASTID
 
-*Note : Ce README est en cours de rédaction et sera complété prochainement.*
-
 ---
 
 ## Table des matières
@@ -64,6 +62,7 @@ spring.datasource.password=votre_mot_de_passe
 
 Utilisez la commande Maven pour télécharger les dépendances du projet : ```mvn install```
 Puis lancer l'application depuis votre ide (intellij).
+
 ---
 
 ## Utilisation
