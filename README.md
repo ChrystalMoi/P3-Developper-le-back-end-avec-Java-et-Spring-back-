@@ -68,8 +68,8 @@ spring.datasource.password=votre_mot_de_passe
    - Exécutez le projet et après démarrage les trois tables se sont créé dans votre base.
 
 3. Pour les utilisations suivantes :
-   3. Dans le fichier ```application.properties``` (```src/main/resources```) assurez-vous que ```spring.sql.init.mode``` soit bien à ```never``` *(```spring.sql.init.mode=never```)*.
-   4. Lancer votre projet
+   - Dans le fichier ```application.properties``` (```src/main/resources```) assurez-vous que ```spring.sql.init.mode``` soit bien à ```never``` *(```spring.sql.init.mode=never```)*.
+   - Lancer votre projet
 
 ---
 
