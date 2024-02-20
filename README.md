@@ -51,7 +51,7 @@ Puis lancer l'application depuis votre ide (intellij).
 
 ### Configurer la base de données
 
-0. Configurer les propriétés de la base de données :
+1. Configurer les propriétés de la base de données :
    Modifiez le fichier ```application.properties``` dans le dossier
    ```src/main/resources``` avec les paramètres appropriés pour votre base de données.
 
