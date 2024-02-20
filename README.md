@@ -62,10 +62,10 @@ spring.datasource.username=votre_utilisateur
 spring.datasource.password=votre_mot_de_passe
 ```
 
-2. Pour la première utilisation du projet : 
-   2. Dans le fichier ```application.properties``` (```src/main/resources```) assurez-vous que ```spring.sql.init.mode``` soit bien à ```always``` *(```spring.sql.init.mode=always```)*.
-   3. Assurez-vous de bien avoir renseigné le ```spring.datasource.url=jdbc:mysql://localhost:3306/nom_de_votre_base```. Il faut que sa valeur corresponde à une base vide.
-   4. Exécutez le projet et après démarrage les trois tables se sont créé dans votre base.
+2. Pour la première utilisation du projet :
+   - Dans le fichier ```application.properties``` (```src/main/resources```) assurez-vous que ```spring.sql.init.mode``` soit bien à ```always``` *(```spring.sql.init.mode=always```)*.
+   - Assurez-vous de bien avoir renseigné le ```spring.datasource.url=jdbc:mysql://localhost:3306/nom_de_votre_base```. Il faut que sa valeur corresponde à une base vide.
+   - Exécutez le projet et après démarrage les trois tables se sont créé dans votre base.
 
 3. Pour les utilisations suivantes :
    3. Dans le fichier ```application.properties``` (```src/main/resources```) assurez-vous que ```spring.sql.init.mode``` soit bien à ```never``` *(```spring.sql.init.mode=never```)*.
