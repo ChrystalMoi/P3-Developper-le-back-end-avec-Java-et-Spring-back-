@@ -1,40 +1,20 @@
-package com.openclassrooms.projet3.entites;
+package com.openclassrooms.projet3.dto;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Builder;
 
 import java.sql.Timestamp;
-@Entity
+
 @Builder
-@Table(name = "MESSAGES")
-public class MessageEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class MessageDto {
+    // Variables
     private Integer id;
-
-    @Column(name = "rental_id")
     private Integer rentalId;
-
-    @Column(name = "user_id")
     private Integer userId;
-
     private String message;
-
-    @Column(name = "created_at")
     private Timestamp createdAt;
-
-    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    //Getter & Setter
-
+    // Getters & Setters
     public Integer getId() {
         return id;
     }
