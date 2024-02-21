@@ -50,7 +50,8 @@ public class AuthController {
     @Operation(
             summary = "User Login",
             description = "Handles user login requests and returns a JWT token upon successful login.",
-            tags = { "Authentication" })
+            tags = { "Authentication" },
+            security = {})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successfully logged in and returns a JWT token.", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "400", description = "User does not exist.", content = { @Content(mediaType = "text/plain") }),
