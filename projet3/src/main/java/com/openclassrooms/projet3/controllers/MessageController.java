@@ -1,5 +1,6 @@
 package com.openclassrooms.projet3.controllers;
 
+import com.openclassrooms.projet3.dto.MessageDto;
 import com.openclassrooms.projet3.entites.MessageEntity;
 import com.openclassrooms.projet3.request.MessageSendRequest;
 import com.openclassrooms.projet3.services.MessageService;
@@ -38,7 +39,7 @@ public class MessageController {
      * Opération pour obtenir tous les messages. <br>
      * Cette méthode GET permet de récupérer une liste de tous les messages.
      *
-     * @return List<MessageEntity> - Liste des messages récupérés.
+     * @return ResponseEntity<List<MessageDto>> - Liste des messages récupérés.
      * @throws Exception En cas d'erreur interne du serveur.
      */
     @Operation(
@@ -49,9 +50,9 @@ public class MessageController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of messages.", content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MessageEntity.class))) }),
             @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "application/json") })
     })
-    @GetMapping
-    public List<MessageEntity> getAllMessages() {
-        return messageService.getAllMessages();
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<List<MessageDto>> getAllMessages() {
+        return ResponseEntity.ok(messageService.getAllMessages());
     }
 
     /**
@@ -72,13 +73,13 @@ public class MessageController {
             @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "application/json") })
     })
     @PostMapping(produces = "application/json")
-    public ResponseEntity envoieMessages(@RequestBody MessageSendRequest messageSendRequest){
+    public ResponseEntity<String> envoieMessages(@RequestBody MessageSendRequest messageSendRequest){
         try {
             // Enregistre le nouvel objet dans la base de données en utilisant la méthode du service
-            MessageEntity createdMessage = messageService.envoieMessages(messageSendRequest);
+            MessageDto createdMessage = messageService.envoieMessages(messageSendRequest);
 
             // Crée un message JSON avec le message de succès
-            String jsonResponse = "{\"message\": \"Message send with success\"}";
+            String jsonResponse = "{\"message\": \"Message sent with success\"}";
 
             // Retourne un ResponseEntity avec le message JSON de succès
             return ResponseEntity.ok(jsonResponse);
@@ -111,8 +112,13 @@ public class MessageController {
             @ApiResponse(responseCode = "200", description = "Message retrieved successfully.", content = { @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "404", description = "Message not found.", content = { @Content(mediaType = "application/json") })
     })
-    @GetMapping("/{id}")
-    public Optional<MessageEntity> getMessageById(@PathVariable Integer id) {
-        return messageService.getMessageById(id);
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<MessageDto> getMessageById(@PathVariable Integer id) {
+        try{
+            return ResponseEntity.ok(messageService.getMessageById(id));
+
+        } catch (Exception e){
+            return ResponseEntity.status(500).build();
+        }
     }
 }

@@ -1,12 +1,16 @@
 package com.openclassrooms.projet3.services;
 
+import com.openclassrooms.projet3.dto.MessageDto;
 import com.openclassrooms.projet3.entites.MessageEntity;
+import com.openclassrooms.projet3.exception.UserDoesNotExistException;
 import com.openclassrooms.projet3.repositories.MessageRepository;
 import com.openclassrooms.projet3.request.MessageSendRequest;
+import com.openclassrooms.projet3.mappers.MessageMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -17,12 +21,16 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public List<MessageEntity> getAllMessages() {
-        return messageRepository.findAll();
+    public List<MessageDto> getAllMessages() {
+        return messageRepository.findAll()
+                .stream()
+                .map(MessageMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
-    public Optional<MessageEntity> getMessageById(Integer id) {
-        return messageRepository.findById(id);
+    public MessageDto getMessageById(Integer id) throws Exception {
+        MessageEntity messageEntity = messageRepository.findById(id).orElseThrow(()->new Exception("Message not found"));
+        return MessageMapper.mapToDto(messageEntity);
     }
 
     /**
@@ -32,19 +40,23 @@ public class MessageService {
      * @return L'entité du message créé et enregistré dans la base de données.
      * @throws IllegalArgumentException Si toutes les informations requises ne sont pas fournies.
      */
-    public MessageEntity envoieMessages(MessageSendRequest messageSendRequest) throws IllegalArgumentException {
+    public MessageDto envoieMessages(MessageSendRequest messageSendRequest) throws IllegalArgumentException {
         // Assure que les données requises sont fournies
         if (messageSendRequest.getMessage().equals("") || messageSendRequest.getUserId() == null || messageSendRequest.getRentalId() == null) {
             throw new IllegalArgumentException("Toutes les informations requises ne sont pas renseignées. Merci de tout renseigner.");
         }
 
         // Création de l'objet MessageEntity
-        MessageEntity messageEntity = new MessageEntity();
-        messageEntity.setMessage(messageSendRequest.getMessage());
-        messageEntity.setUserId((messageSendRequest.getUserId()));
-        messageEntity.setRentalId((messageSendRequest.getRentalId()));
+        MessageDto messageDto = MessageDto.builder()
+                .rentalId(messageSendRequest.getRentalId())
+                .userId(messageSendRequest.getUserId())
+                .message(messageSendRequest.getMessage())
+                .build();
 
-        // Enregistre le nouveau message objet dans la base de données en utilisant la méthode du repository
-        return messageRepository.save(messageEntity);
+        MessageEntity messageEntity = MessageMapper.mapToEntity(messageDto);
+
+        MessageEntity response = messageRepository.save(messageEntity);
+
+        return MessageMapper.mapToDto(response);
     }
 }
