@@ -10,7 +10,6 @@ public abstract class UserMapper {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .password(user.getPassword())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
@@ -21,7 +20,6 @@ public abstract class UserMapper {
                 .id(userDto.getId())
                 .email(userDto.getEmail())
                 .name(userDto.getName())
-                .password(userDto.getPassword())
                 .createdAt(userDto.getCreatedAt())
                 .updatedAt(userDto.getUpdatedAt())
                 .build();

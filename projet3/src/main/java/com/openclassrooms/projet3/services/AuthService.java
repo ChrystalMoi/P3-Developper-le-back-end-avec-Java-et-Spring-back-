@@ -71,7 +71,7 @@ public class AuthService {
         Timestamp temps = Timestamp.valueOf(LocalDateTime.now());
 
         // Crée un nouvel utilisateur via UserEntity
-        UserDto userDto = UserDto.builder()
+        UserEntity user = UserEntity.builder()
                 .email(registrationRequest.getEmail())
                 .name(registrationRequest.getName())
                 .password(passwordEncoder.encode(registrationRequest.getPassword()))
@@ -79,9 +79,7 @@ public class AuthService {
                 .updatedAt(temps)
                 .build();
 
-        UserEntity userEntity = UserMapper.mapToEntity(userDto);
-
-        UserEntity response = userRepository.save(userEntity);
+        UserEntity response = userRepository.save(user);
 
         // Génère un token JWT uniquement si l'user est créable
         return jwtTokenProvider.generateToken(UserMapper.mapToDto(response));
@@ -114,11 +112,8 @@ public class AuthService {
             // Extraction de UserEntity de l'intérieur de l'Optional
             UserEntity bddUser = optionalBddUser.get();
 
-            // Transforme le bddUser en Dto
-            UserDto userMapper = UserMapper.mapToDto(bddUser);
-
             // Vérification mdp.bdd = mdp.entrée
-            boolean matchPasswords = passwordEncoder.matches(userLoginRequest.getPassword(), userMapper.getPassword());
+            boolean matchPasswords = passwordEncoder.matches(userLoginRequest.getPassword(), bddUser.getPassword());
 
             // Si les mots de passe ne sont pas identique alors Exception
             if (!matchPasswords) {
@@ -127,6 +122,9 @@ public class AuthService {
 
             //Si les mots de passe sont identiques alors connexion
             else {
+                // Transforme le bddUser en Dto
+                UserDto userMapper = UserMapper.mapToDto(bddUser);
+
                 // Génère un token JWT
                 return jwtTokenProvider.generateToken(userMapper);
             }

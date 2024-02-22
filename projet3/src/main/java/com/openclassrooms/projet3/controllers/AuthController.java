@@ -12,19 +12,18 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -118,8 +117,8 @@ public class AuthController {
     /**
      * Opération pour obtenir les détails de l'utilisateur.  <br>
      * Cette méthode GET permet de récupérer les détails de l'utilisateur authentifié.
-     * @param context Le contexte de sécurité actuel pour l'utilisateur authentifié.
-     * @return ResponseEntity<String> Réponse HTTP contenant les détails de l'utilisateur au format JSON en cas de succès.  <br>
+     * @param principal - Permet de récupérer l'id de l'utilisateur authentifié.
+     * @return ResponseEntity<UserDto> Réponse HTTP contenant les détails de l'utilisateur au format JSON en cas de succès.  <br>
      * En cas d'erreur (par exemple, si l'utilisateur n'existe pas, n'est pas authentifié ou s'il y a une erreur interne du serveur),
      * une réponse appropriée avec un message d'erreur est renvoyée.
      */
@@ -127,35 +126,33 @@ public class AuthController {
             summary = "Get User Details",
             description = "Retrieves details of the authenticated user.",
             tags = { "User" })
+    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successfully retrieved user details.", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "400", description = "User does not exist or is not authenticated.", content = { @Content(mediaType = "text/plain") }),
             @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "text/plain") })
     })
     @GetMapping(value = "/me", produces = "application/json")
-    public ResponseEntity<String> me(@CurrentSecurityContext SecurityContext context){
+    public ResponseEntity<UserDto> me(Principal principal){
         try {
-            // Pour récupérer l'user authentifié (avec token)
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-            if(auth.getPrincipal().equals("anonymousUser")) {
+            if(principal==null) {
                 LOGGER.error("Utilisateur non connecté.");
-                return ResponseEntity.ok().body("");
+                return ResponseEntity.ok().build();
             }
 
-            Integer userId = (Integer) auth.getPrincipal();
+            Integer userId = Integer.valueOf(principal.getName());
 
             UserDto reponseUser = authService.meUser(userId);
 
-            return ResponseEntity.ok().body(reponseUser.infoMe());
+            return ResponseEntity.ok().body(reponseUser);
 
         } catch (UserDoesNotExistException e){
-            LOGGER.error("L'utilisateur n'existe pas.");
-            return ResponseEntity.badRequest().body(e.getMessage());
+            LOGGER.error("Erreur : " + e.getMessage());
+            return ResponseEntity.badRequest().build();
 
         } catch (Exception e) {
             LOGGER.error("Erreur : " + e.getMessage());
-            return ResponseEntity.internalServerError().body("");
+            return ResponseEntity.internalServerError().build();
         }
     }
 }

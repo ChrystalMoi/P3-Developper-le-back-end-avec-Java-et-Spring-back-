@@ -14,7 +14,6 @@ public class UserDto {
     private Integer id;
     private String email;
     private String name;
-    private String password;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -44,14 +43,6 @@ public class UserDto {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -66,10 +57,5 @@ public class UserDto {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public String infoMe() {
-        return String.format("{\"id\":%s, \"name\":\"%s\", \"email\":\"%s\", \"created_at\":\"%s\", \"updated_at\":\"%s\"}",
-                getId(), getName(), getEmail(), getCreatedAt(), getUpdatedAt());
     }
 }
