@@ -1,10 +1,14 @@
 package com.openclassrooms.projet3.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MessageDto {
     // Variables
     private Integer id;
