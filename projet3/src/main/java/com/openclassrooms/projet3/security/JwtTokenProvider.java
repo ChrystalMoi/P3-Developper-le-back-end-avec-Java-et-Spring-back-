@@ -1,5 +1,6 @@
 package com.openclassrooms.projet3.security;
 
+import com.openclassrooms.projet3.dto.TokenDto;
 import com.openclassrooms.projet3.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -43,7 +44,7 @@ public class JwtTokenProvider {
      * @param userDto L'entité représentant l'utilisateur pour lequel générer le jeton JWT.
      * @return String - Le jeton JWT généré, encodé sous forme de chaîne de caractères.
      */
-    public String generateToken(UserDto userDto) {
+    public TokenDto generateToken(UserDto userDto) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -57,6 +58,6 @@ public class JwtTokenProvider {
                 .claim("updated_at", userDto.getUpdatedAt())
                 .build();
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
-        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        return TokenDto.builder().token(this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue()).build();
     }
 }
