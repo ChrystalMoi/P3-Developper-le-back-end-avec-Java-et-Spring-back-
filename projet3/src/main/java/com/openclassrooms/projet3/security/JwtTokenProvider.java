@@ -1,6 +1,6 @@
 package com.openclassrooms.projet3.security;
 
-import com.openclassrooms.projet3.entites.UserEntity;
+import com.openclassrooms.projet3.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -40,21 +40,21 @@ public class JwtTokenProvider {
      * Ce jeton contient les revendications (claims) pertinentes pour l'utilisateur, telles que son identifiant, son nom, son adresse e-mail, et les horodatages de création et de mise à jour. <br>
      * Le jeton est signé avec un algorithme HMAC SHA-256.
      *
-     * @param userEntity L'entité représentant l'utilisateur pour lequel générer le jeton JWT.
+     * @param userDto L'entité représentant l'utilisateur pour lequel générer le jeton JWT.
      * @return String - Le jeton JWT généré, encodé sous forme de chaîne de caractères.
      */
-    public String generateToken(UserEntity userEntity) {
+    public String generateToken(UserDto userDto) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.DAYS))
-                .subject(userEntity.getEmail())
-                .claim("id", userEntity.getId())
-                .claim("name", userEntity.getName())
-                .claim("email", userEntity.getEmail())
-                .claim("created_at", userEntity.getCreatedAt())
-                .claim("updated_at", userEntity.getUpdatedAt())
+                .subject(userDto.getEmail())
+                .claim("id", userDto.getId())
+                .claim("name", userDto.getName())
+                .claim("email", userDto.getEmail())
+                .claim("created_at", userDto.getCreatedAt())
+                .claim("updated_at", userDto.getUpdatedAt())
                 .build();
         JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
         return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();

@@ -1,9 +1,11 @@
 package com.openclassrooms.projet3.services;
 
+import com.openclassrooms.projet3.dto.UserDto;
 import com.openclassrooms.projet3.entites.UserEntity;
 import com.openclassrooms.projet3.exception.InvalidPasswordException;
 import com.openclassrooms.projet3.exception.UserAlreadyExistsException;
 import com.openclassrooms.projet3.exception.UserDoesNotExistException;
+import com.openclassrooms.projet3.mappers.UserMapper;
 import com.openclassrooms.projet3.repositories.UserRepository;
 import com.openclassrooms.projet3.request.UserLoginRequest;
 import com.openclassrooms.projet3.request.UserRegistrationRequest;
@@ -69,18 +71,20 @@ public class AuthService {
         Timestamp temps = Timestamp.valueOf(LocalDateTime.now());
 
         // Crée un nouvel utilisateur via UserEntity
-        UserEntity user = new UserEntity();
-        user.setEmail(registrationRequest.getEmail());
-        user.setName(registrationRequest.getName());
-        user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-        user.setCreatedAt(temps);
-        user.setUpdatedAt(temps);
+        UserDto userDto = UserDto.builder()
+                .email(registrationRequest.getEmail())
+                .name(registrationRequest.getName())
+                .password(passwordEncoder.encode(registrationRequest.getPassword()))
+                .createdAt(temps)
+                .updatedAt(temps)
+                .build();
 
-        // Enregistre l'utilisateur dans la base de données
-        userRepository.save(user);
+        UserEntity userEntity = UserMapper.mapToEntity(userDto);
+
+        UserEntity response = userRepository.save(userEntity);
 
         // Génère un token JWT uniquement si l'user est créable
-        return jwtTokenProvider.generateToken(user);
+        return jwtTokenProvider.generateToken(UserMapper.mapToDto(response));
     }
 
     /**
@@ -110,8 +114,11 @@ public class AuthService {
             // Extraction de UserEntity de l'intérieur de l'Optional
             UserEntity bddUser = optionalBddUser.get();
 
+            // Transforme le bddUser en Dto
+            UserDto userMapper = UserMapper.mapToDto(bddUser);
+
             // Vérification mdp.bdd = mdp.entrée
-            boolean matchPasswords = passwordEncoder.matches(userLoginRequest.getPassword(), bddUser.getPassword());
+            boolean matchPasswords = passwordEncoder.matches(userLoginRequest.getPassword(), userMapper.getPassword());
 
             // Si les mots de passe ne sont pas identique alors Exception
             if (!matchPasswords) {
@@ -121,7 +128,7 @@ public class AuthService {
             //Si les mots de passe sont identiques alors connexion
             else {
                 // Génère un token JWT
-                return jwtTokenProvider.generateToken(bddUser);
+                return jwtTokenProvider.generateToken(userMapper);
             }
         }
     }
@@ -133,8 +140,8 @@ public class AuthService {
      * @return UserEntity - L'utilisateur avec l'id du paramètre.
      * @throws UserDoesNotExistException - si l'utilisateur n'est pas dans la base de données.
      */
-    public UserEntity meUser(Integer userId) throws UserDoesNotExistException{
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserDoesNotExistException("User introuvable"));
+    public UserDto meUser(Integer userId) throws UserDoesNotExistException{
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistException("User introuvable"));
+        return UserMapper.mapToDto(userEntity);
     }
 }

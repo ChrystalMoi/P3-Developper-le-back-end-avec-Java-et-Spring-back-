@@ -1,6 +1,6 @@
 package com.openclassrooms.projet3.controllers;
 
-import com.openclassrooms.projet3.entites.UserEntity;
+import com.openclassrooms.projet3.dto.UserDto;
 import com.openclassrooms.projet3.exception.InvalidPasswordException;
 import com.openclassrooms.projet3.exception.UserAlreadyExistsException;
 import com.openclassrooms.projet3.exception.UserDoesNotExistException;
@@ -145,7 +145,7 @@ public class AuthController {
 
             Integer userId = (Integer) auth.getPrincipal();
 
-            UserEntity reponseUser = authService.meUser(userId);
+            UserDto reponseUser = authService.meUser(userId);
 
             return ResponseEntity.ok().body(reponseUser.infoMe());
 

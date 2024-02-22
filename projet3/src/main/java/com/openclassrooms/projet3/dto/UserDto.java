@@ -1,7 +1,14 @@
 package com.openclassrooms.projet3.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
     // Variables
     private Integer id;
@@ -59,5 +66,10 @@ public class UserDto {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String infoMe() {
+        return String.format("{\"id\":%s, \"name\":\"%s\", \"email\":\"%s\", \"created_at\":\"%s\", \"updated_at\":\"%s\"}",
+                getId(), getName(), getEmail(), getCreatedAt(), getUpdatedAt());
     }
 }
