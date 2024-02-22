@@ -1,9 +1,14 @@
 package com.openclassrooms.projet3.dto;
 
-import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RentalDto {
     // Variables
     private Integer id;
