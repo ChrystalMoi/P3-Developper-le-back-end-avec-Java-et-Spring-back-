@@ -1,5 +1,6 @@
 package com.openclassrooms.projet3.controllers;
 
+import com.openclassrooms.projet3.dto.TokenDto;
 import com.openclassrooms.projet3.dto.UserDto;
 import com.openclassrooms.projet3.exception.InvalidPasswordException;
 import com.openclassrooms.projet3.exception.UserAlreadyExistsException;
@@ -56,27 +57,24 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Invalid password.", content = { @Content(mediaType = "text/plain") })
     })
     @PostMapping(value = "/login", produces = "application/json")
-    public ResponseEntity<String> login(@RequestBody UserLoginRequest userLoginRequest) {
+    public ResponseEntity<TokenDto> login(@RequestBody UserLoginRequest userLoginRequest) {
         try{
             // Appelle le service LoginService pour effectuer la connexion et récupère le token JWT résultant
-            String token = authService.loginUser(userLoginRequest);
+            TokenDto token = authService.loginUser(userLoginRequest);
 
             LOGGER.info("login token created");
 
-            // objet json sous forme de string
-            String reponse = "{\"token\":\""+token+"\"}";
-
             // Retourne une réponse HTTP avec le token JWT dans le corps de la réponse
-            return ResponseEntity.ok().body(reponse);
+            return ResponseEntity.ok().body(token);
 
         }
         catch (UserDoesNotExistException e){
             LOGGER.error("login exception UserDoesNotExistException");
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
         catch (InvalidPasswordException e){
             LOGGER.error("login exception InvalidPasswordException");
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(401).build();
         }
     }
 
@@ -96,21 +94,19 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "User already exists.", content = { @Content(mediaType = "text/plain") })
     })
     @PostMapping(value = "/register", produces = "application/json")
-    public ResponseEntity<String> register(@RequestBody UserRegistrationRequest registrationRequest) {
+    public ResponseEntity<TokenDto> register(@RequestBody UserRegistrationRequest registrationRequest) {
         try {
             // Appelle le service RegisterService pour effectuer l'inscription et récupère le token JWT résultant
-            String token = authService.registerUser(registrationRequest);
+            TokenDto token = authService.registerUser(registrationRequest);
 
             LOGGER.info("Register token created");
 
-            String reponse = "{\"token\":\""+token+"\"}";
-
             // Retourne une réponse HTTP avec le token JWT dans le corps de la réponse
-            return ResponseEntity.ok().body(reponse);
+            return ResponseEntity.ok().body(token);
 
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("register exception UserAlreadyExistsException");
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 

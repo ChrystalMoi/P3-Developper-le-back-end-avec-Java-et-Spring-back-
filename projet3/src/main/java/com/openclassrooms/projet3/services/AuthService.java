@@ -1,5 +1,6 @@
 package com.openclassrooms.projet3.services;
 
+import com.openclassrooms.projet3.dto.TokenDto;
 import com.openclassrooms.projet3.dto.UserDto;
 import com.openclassrooms.projet3.entites.UserEntity;
 import com.openclassrooms.projet3.exception.InvalidPasswordException;
@@ -57,7 +58,7 @@ public class AuthService {
      * @throws IllegalArgumentException Si des informations requises (adresse e-mail, nom ou mot de passe) sont manquantes dans la demande d'inscription.
      */
     @Transactional
-    public String registerUser(UserRegistrationRequest registrationRequest) throws UserAlreadyExistsException {
+    public TokenDto registerUser(UserRegistrationRequest registrationRequest) throws UserAlreadyExistsException {
         // Vérification si l'utilisateur existe déjà dans la base de données (ici par email)
         if (userRepository.existsByEmail(registrationRequest.getEmail())) {
             throw new UserAlreadyExistsException("L'utilisateur avec ce mail existe déjà.");
@@ -93,7 +94,7 @@ public class AuthService {
      * @throws UserDoesNotExistException Si l'utilisateur n'existe pas dans la base de données.
      * @throws InvalidPasswordException Si le mot de passe fourni est invalide.
      */
-    public String loginUser(UserLoginRequest userLoginRequest) throws UserDoesNotExistException, InvalidPasswordException {
+    public TokenDto loginUser(UserLoginRequest userLoginRequest) throws UserDoesNotExistException, InvalidPasswordException {
         // S'il n'y a pas d'entrée avec l'email dans la bdd alors lancement de l'exception
         if (!userRepository.existsByEmail(userLoginRequest.getEmail())) {
             throw new UserDoesNotExistException("L'utilisateur avec ce mail n'existe pas.");
