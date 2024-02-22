@@ -1,7 +1,5 @@
 
-²
-java:S1130,"”Remove the declaration of thrown exception 'com.openclassrooms.projet3.exception.ImageNotFoundException', as it cannot be thrown from method's body.(ŒÈ¿Ê8Êä¼îØ1
 L
-java:S1068"*Remove this unused "logger" private field.(Îâ×ıÿÿÿÿ8Ê¼æÒØ1
+java:S1068"*Remove this unused "logger" private field.(Îâ×ıÿÿÿÿ8Ò—ş‹İ1
 K
-java:S1068"0Remove this unused "imageService" private field.(Ô}8éê—õØ1
+java:S1068#"0Remove this unused "imageService" private field.(Ô}8Ô—ş‹İ1

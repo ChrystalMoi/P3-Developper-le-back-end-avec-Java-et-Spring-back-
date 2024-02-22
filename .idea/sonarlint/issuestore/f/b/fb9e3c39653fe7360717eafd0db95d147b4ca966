@@ -1,5 +1,12 @@
 
 T
-java:S1481s"2Remove this unused "createdRental" local variable.(ç‚°–þÿÿÿÿ8†Õ…ìÜ1
+java:S1481o"2Remove this unused "createdRental" local variable.(ç‚°–þÿÿÿÿ8µ²ÒŒÝ1
 O
-java:S1481º"1Remove this unused "rentalEntity" local variable.(‹¦ê†8¡Õ…ìÜ1
+java:S1481º"1Remove this unused "rentalEntity" local variable.(‹¦ê†8î²ÒŒÝ1
+z
+java:S1128"XRemove this unused import 'com.openclassrooms.projet3.exception.ImageNotFoundException'.(œÏÙƒûÿÿÿÿ8Ð“ÒŒÝ1
+q
+java:S1128
+"ORemove this unused import 'com.openclassrooms.projet3.response.RentalResponse'.(Î®ã©ûÿÿÿÿ8Ó“ÒŒÝ1
+Q
+java:S1128 "/Remove this unused import 'java.util.Optional'.(¨˜ëÝüÿÿÿÿ8Ø“ÒŒÝ1

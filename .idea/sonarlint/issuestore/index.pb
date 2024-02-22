@@ -83,3 +83,7 @@ x
 Hprojet3/src/main/java/com/openclassrooms/projet3/mappers/UserMapper.java,a\d\ad65d51b04c9080f8f4c5008ab91be045747d7be
 {
 Kprojet3/src/main/java/com/openclassrooms/projet3/mappers/MessageMapper.java,a\6\a62015b9447f01cfda355e500a35923db1861094
+z
+Jprojet3/src/main/java/com/openclassrooms/projet3/mappers/RentalMapper.java,a\1\a19e284612b2a89cc0bae30cd412ff2a70d34c56
+r
+Bprojet3/src/main/java/com/openclassrooms/projet3/dto/TokenDto.java,2\c\2cbac358923a807d92d2342fd680fcf8ed62e74a
