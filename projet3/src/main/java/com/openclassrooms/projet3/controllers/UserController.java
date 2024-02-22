@@ -1,6 +1,6 @@
 package com.openclassrooms.projet3.controllers;
 
-import com.openclassrooms.projet3.entites.UserEntity;
+import com.openclassrooms.projet3.dto.UserDto;
 import com.openclassrooms.projet3.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,13 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -46,8 +46,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "No users found.", content = { @Content(mediaType = "application/json") })
     })
     @GetMapping
-    public List<UserEntity> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     /**
@@ -69,9 +69,12 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found.", content = { @Content(mediaType = "application/json") })
     })
     @GetMapping(value = "/{id}")
-    public Optional<UserEntity> getUserById(@PathVariable Integer id) {
-        // Appel à la méthode getUserById() du service UserService
-        // Cette méthode utilise UserRepository pour récupérer un user par ID dans la base de donnée
-        return userService.getUserById(id);
+    public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
+        try{
+            return ResponseEntity.ok(userService.getUserById(id));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).build();
+        }
     }
 }
