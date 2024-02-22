@@ -2,14 +2,12 @@ package com.openclassrooms.projet3.services;
 
 import com.openclassrooms.projet3.dto.MessageDto;
 import com.openclassrooms.projet3.entites.MessageEntity;
-import com.openclassrooms.projet3.exception.UserDoesNotExistException;
+import com.openclassrooms.projet3.mappers.MessageMapper;
 import com.openclassrooms.projet3.repositories.MessageRepository;
 import com.openclassrooms.projet3.request.MessageSendRequest;
-import com.openclassrooms.projet3.mappers.MessageMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
