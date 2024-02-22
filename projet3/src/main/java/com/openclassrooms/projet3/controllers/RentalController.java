@@ -1,6 +1,7 @@
 package com.openclassrooms.projet3.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.projet3.dto.RentalDto;
 import com.openclassrooms.projet3.entites.RentalEntity;
 import com.openclassrooms.projet3.exception.ImageNotFoundException;
 import com.openclassrooms.projet3.exception.RentalDoesNotExistException;
@@ -69,7 +70,7 @@ public class RentalController {
     @GetMapping(produces = "application/json")
     public ResponseEntity<String> getAllRentals() {
         try{
-            List<RentalResponse> listGetAll = rentalService.getAllRentals();
+            List<RentalDto> listGetAll = rentalService.getAllRentals();
 
             String response = new ObjectMapper().writeValueAsString(listGetAll);
 
@@ -77,10 +78,6 @@ public class RentalController {
 
             // Appel à la méthode de RentalService
             return ResponseEntity.ok().body(jsonResponse);
-        }
-        catch (ImageNotFoundException e) {
-            LOGGER.error("ImageNotFoundException : " + e);
-            return ResponseEntity.badRequest().build();
         }
         catch (Exception e) {
             LOGGER.error("Exception : "+ e);
@@ -107,9 +104,8 @@ public class RentalController {
             @ApiResponse(responseCode = "400", description = "Bad request. Check if all required fields are provided.", content = { @Content(mediaType = "application/json") }),
             @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "text/plain") })
     })
-    @PostMapping(produces = "application/json")
+    @PostMapping(consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<String> createRental(@ModelAttribute RentalCreationRequest rentalRequest, Principal principal) {
-
         try {
             // Enregistre le nouvel objet dans la base de données en utilisant la méthode du service
             RentalEntity createdRental = rentalService.createRental(rentalRequest, principal.getName());
@@ -151,8 +147,13 @@ public class RentalController {
             @ApiResponse(responseCode = "404", description = "Rental not found.", content = { @Content(mediaType = "application/json") })
     })
     @GetMapping(value = "/{id}", produces = "application/json")
-    public Optional<RentalEntity> getRentalById(@PathVariable Integer id) {
-        return rentalService.getRentalById(id);
+    public ResponseEntity<RentalDto> getRentalById(@PathVariable Integer id) {
+        try{
+            return ResponseEntity.ok(rentalService.getRentalById(id));
+        }
+        catch(Exception e){
+            return ResponseEntity.status(500).build();
+        }
     }
 
     /**
@@ -180,8 +181,7 @@ public class RentalController {
             @ApiResponse(responseCode = "500", description = "Internal server error.", content = { @Content(mediaType = "application/json") })
     })
     @PutMapping(value = "/{id}", consumes = "multipart/form-data" ,produces = "application/json")
-    public ResponseEntity updateRental(@PathVariable Integer id, @ModelAttribute RentalUpdateRequest rentalUpdateRequest){
-
+    public ResponseEntity<String> updateRental(@PathVariable Integer id, @ModelAttribute RentalUpdateRequest rentalUpdateRequest){
         try {
             RentalEntity rentalEntity = rentalService.updateRental(rentalUpdateRequest, id);
 

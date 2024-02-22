@@ -1,10 +1,14 @@
 package com.openclassrooms.projet3.services;
 
+import com.openclassrooms.projet3.dto.RentalDto;
+import com.openclassrooms.projet3.dto.UserDto;
 import com.openclassrooms.projet3.entites.RentalEntity;
 import com.openclassrooms.projet3.entites.UserEntity;
 import com.openclassrooms.projet3.exception.ImageNotFoundException;
 import com.openclassrooms.projet3.exception.RentalDoesNotExistException;
 import com.openclassrooms.projet3.exception.UserDoesNotExistException;
+import com.openclassrooms.projet3.mappers.RentalMapper;
+import com.openclassrooms.projet3.mappers.UserMapper;
 import com.openclassrooms.projet3.repositories.RentalRepository;
 import com.openclassrooms.projet3.repositories.UserRepository;
 import com.openclassrooms.projet3.request.RentalCreationRequest;
@@ -17,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RentalService {
@@ -41,38 +46,19 @@ public class RentalService {
     // --------------------------------------
     // Méthode pour récupérer tous les biens en location
     // --------------------------------------
-    public List<RentalResponse> getAllRentals() throws ImageNotFoundException {
-        // On stock la liste des rentals entities dans une variable
-        List<RentalEntity> rentalEntities = rentalRepository.findAll();
-
-        List<RentalResponse> rentalResponses = new ArrayList<>();
-
-        // Pour chaque variable rentalEntity de type RentalEntity dans la liste rentalEntities
-        for (RentalEntity rentalEntity : rentalEntities) {
-            // Création de l'objet rentalResponse
-            RentalResponse rentalResponse = new RentalResponse(
-                    rentalEntity.getId(),
-                    rentalEntity.getName(),
-                    rentalEntity.getSurface(),
-                    rentalEntity.getPrice(),
-                    rentalEntity.getPicture(),
-                    rentalEntity.getDescription(),
-                    rentalEntity.getOwnerId(),
-                    rentalEntity.getCreatedAt(),
-                    rentalEntity.getUpdatedAt());
-
-            // Ajoute l'objet rentalResponse à la liste RentalResponses
-            rentalResponses.add(rentalResponse);
-        }
-
-        return rentalResponses;
+    public List<RentalDto> getAllRentals() {
+        return rentalRepository.findAll()
+                .stream()
+                .map(RentalMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     // --------------------------------------
     // Méthode pour récupérer un bien en location par son ID
     // --------------------------------------
-    public Optional<RentalEntity> getRentalById(Integer id) {
-        return rentalRepository.findById(id);
+    public RentalDto getRentalById(Integer id) {
+        RentalEntity rentalEntity = rentalRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Rental not found"));
+        return RentalMapper.mapToDto(rentalEntity);
     }
 
     /**
@@ -97,7 +83,7 @@ public class RentalService {
      * @throws IOException En cas d'erreur lors de l'accès ou de la manipulation d'un fichier.
      * @throws UserDoesNotExistException Si l'utilisateur actuel n'existe pas dans la base de données.
      */
-    public RentalEntity createRental(RentalCreationRequest rentalRequest, String currentUserId) throws IllegalArgumentException, IOException {
+    public RentalEntity createRental(RentalCreationRequest rentalRequest, String currentUserId) throws IllegalArgumentException {
         // Assure que les données requises sont fournies
         if (!areValidRequestRentalFields(rentalRequest.getName(), rentalRequest.getSurface(), rentalRequest.getPrice())) {
             throw new IllegalArgumentException("Toutes les informations requises ne sont pas renseignées. Merci de tout renseigner.");
@@ -106,14 +92,19 @@ public class RentalService {
         UserEntity currentUser = userRepository.findById(Integer.valueOf(currentUserId))
                 .orElseThrow(()->new UserDoesNotExistException("User does not exist."));
 
-        // Création de l'objet RentalEntity
-        RentalEntity rentalEntity = new RentalEntity();
-        rentalEntity.setName(rentalRequest.getName());
-        rentalEntity.setPrice(rentalRequest.getPrice());
-        rentalEntity.setPicture("https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg");
-        rentalEntity.setSurface(rentalRequest.getSurface());
-        rentalEntity.setDescription(rentalRequest.getDescription());
-        rentalEntity.setOwnerId(currentUser.getId());
+        final String image = "https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg";
+
+        // Création de l'objet RentalDto
+        RentalDto rentalDto = RentalDto.builder()
+                .name(rentalRequest.getName())
+                .price(rentalRequest.getPrice())
+                .picture(image)
+                .surface(rentalRequest.getSurface())
+                .description(rentalRequest.getDescription())
+                .ownerId(currentUser.getId())
+                .build();
+
+        RentalEntity rentalEntity = RentalMapper.mapToEntity(rentalDto);
 
         // Enregistre le nouvel objet dans la base de données en utilisant la méthode du repository
         return rentalRepository.save(rentalEntity);
